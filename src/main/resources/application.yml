@@ -1,0 +1,31 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        default_batch_fetch_size: 100
+
+jwt:
+  secret:
+  expirationHours:
+  expirationDays:
+  issuer:
+
+#logging:
+#  level:
+#    root: info
+#    org.springframework: debug
