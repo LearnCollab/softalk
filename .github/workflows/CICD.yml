@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: set yaml secret
+    - name: Set yaml secret
       uses: microsoft/variable-substitution@v1
       with:
         files: './src/main/resources/application.yml'
@@ -37,7 +37,15 @@ jobs:
         jwt.expirationHours: ${{ secrets.JWT_EXPIRATIONHOURS }}
         jwt.expirationDays: ${{ secrets.JWT_EXPIRATIONDAYS }}
         jwt.issuer: ${{ secrets.ISSUER }}
-    
+
+    - name: Replace nginx variables
+      run: |
+       sed -i 's/SERVER_NAME/${{ secrets.SERVER_NAME }}/g' ./nginx/conf.d/nginx.conf
+
+    - name: Replace docker variables
+      run: |
+       sed -i 's/DOCKER_USERNAME/${{ secrets.DOCKER_USERNAME }}/g' ./docker-compose.yml
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
