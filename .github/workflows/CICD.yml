@@ -45,7 +45,16 @@ jobs:
     - name: Replace docker variables
       run: |
         sed -i 's/DOCKER_USERNAME/${{ secrets.DOCKER_USERNAME }}/g' ./docker-compose.yml
-
+        
+    - name: Copy docker-compose.yml to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -i private_key.pem -o StrictHostKeyChecking=no docker-compose.yml ec2-user@${{ secrets.HOST }}:/path/where/you/want/
+        rm -f private_key.pem
+      
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
