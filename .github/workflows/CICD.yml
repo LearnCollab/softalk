@@ -40,11 +40,11 @@ jobs:
 
     - name: Replace nginx variables
       run: |
-       sed -i 's/SERVER_NAME/${{ secrets.SERVER_NAME }}/g' ./nginx/conf.d/nginx.conf
+        sed -i 's/SERVER_NAME/${{ secrets.SERVER_NAME }}/g' ./nginx/conf.d/nginx.conf
 
     - name: Replace docker variables
       run: |
-       sed -i 's/DOCKER_USERNAME/${{ secrets.DOCKER_USERNAME }}/g' ./docker-compose.yml
+        sed -i 's/DOCKER_USERNAME/${{ secrets.DOCKER_USERNAME }}/g' ./docker-compose.yml
 
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -66,3 +66,24 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: clean build -x test
+
+    - name: Docker build and push
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/softalk-spring .
+        docker build -f dockerfile-nginx -t ${{ secrets.DOCKER_REPO }}/softalk-nginx .
+        docker push ${{ secrets.DOCKER_USERNAME }}/softalk-spring
+        docker push ${{ secrets.DOCKER_USERNAME }}/softalk-nginx
+
+    - name: Deploy
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST }}
+        username: ec2-user
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/softalk-spring
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/softalk-nginx
+          docker-compose up -d
+          docker image prune -f
