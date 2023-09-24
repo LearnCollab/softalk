@@ -52,7 +52,7 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no docker-compose.yml ec2-user@${{ secrets.HOST }}:/path/where/you/want/
+        scp -i private_key.pem -o StrictHostKeyChecking=no docker-compose.yml ec2-user@${{ secrets.HOST }}:/home/ec2-user/
         rm -f private_key.pem
       
     - name: Set up JDK 17
