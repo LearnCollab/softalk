@@ -38,10 +38,6 @@ jobs:
         jwt.expirationDays: ${{ secrets.JWT_EXPIRATIONDAYS }}
         jwt.issuer: ${{ secrets.ISSUER }}
 
-    - name: Replace nginx variables
-      run: |
-        sed -i 's/SERVER_NAME/${{ secrets.SERVER_NAME }}/g' ./nginx/conf.d/nginx.conf
-
     - name: Replace docker variables
       run: |
         sed -i 's/DOCKER_USERNAME/${{ secrets.DOCKER_USERNAME }}/g' ./docker-compose.yml
