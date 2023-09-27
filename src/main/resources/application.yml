@@ -27,7 +27,7 @@ spring:
             client-id:
             client-secret:
             client-name: kakao
-            client-authentication-method: POST
+            client-authentication-method: client_secret_post
             redirect-uri: "http://learncollab-softalk.com/login/oauth2/code/kakao"
             authorization-grant-type: authorization_code
             scope:
