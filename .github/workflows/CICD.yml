@@ -33,6 +33,9 @@ jobs:
         spring.datasource.username: ${{ secrets.DATABASE_USERNAME }}
         spring.datasource.password: ${{ secrets.DATABASE_PASSWORD }}
 
+        spring.security.oauth2.client.registration.kakao.client-id: ${{ secrets.CLIENT_ID }}
+        spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.CLIENT_SECRET }}
+
         jwt.secret: ${{ secrets.JWT_SECRET }}
         jwt.expirationHours: ${{ secrets.JWT_EXPIRATIONHOURS }}
         jwt.expirationDays: ${{ secrets.JWT_EXPIRATIONDAYS }}
