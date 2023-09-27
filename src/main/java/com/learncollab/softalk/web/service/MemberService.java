@@ -30,13 +30,10 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
         memberRepository.save(member);
     }
 
-    /*소셜 로그인
-    *
-    * 코멘트:
-    * 이때 name은 중복 가능함 일반 로그인은 중복 불가능한데 .. 이 부분 어떻게 하지
-    * 그냥 랜덤 이름 만들고 나중에 설정하라고 할까....
-    * 이메일 문제도..
-    * */
+    /*소셜 로그인*/
+    //TODO
+    // - 일반 로그인에서 name은 중복 불가능한데 카카오 로그인할 때의 name은 중복 가능함
+    // - 이메일 문제도 있음..
     public void registerIfNewUser(String email, String name, String registrationId) {
         if (!findMemberByEmail(email).isPresent()) {
             saveOAuth2User(email, name, registrationId);
