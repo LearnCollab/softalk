@@ -1,11 +1,11 @@
 package com.learncollab.softalk.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.dto.member.JwtToken;
-import com.learncollab.softalk.domain.dto.member.LoginResDto;
 import com.learncollab.softalk.exception.member.MemberException;
 import com.learncollab.softalk.exception.validator.MemberValidator;
+import com.learncollab.softalk.web.security.JwtResponseBuilder;
+import com.learncollab.softalk.web.service.AuthenticationService;
 import com.learncollab.softalk.web.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +24,8 @@ import static com.learncollab.softalk.exception.ExceptionType.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AuthenticationService authenticationService;
+    private final JwtResponseBuilder jwtResponseBuilder;
 
     /*회원 가입 API*/
     @PostMapping("/join")
@@ -43,27 +45,15 @@ public class MemberController {
     }
 
 
-    /*로그인 처리 로직*/
+    /*일반 로그인 처리 로직*/
     @PostMapping("/login")
     public ResponseEntity<Void> login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        JwtToken jwtToken = memberService.login(email, password);
+        JwtToken jwtToken = authenticationService.authenticateAndGenerateToken(email, password);
 
-        String grantType = jwtToken.getGrantType();
-        String accessToken = jwtToken.getAccessToken();
-        String refreshToken = jwtToken.getRefreshToken();
-
-        response.addHeader("Authorization", grantType + " " + accessToken);
-
-        LoginResDto loginResDto = new LoginResDto(refreshToken);
-        response.setContentType("application/json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(loginResDto);
-        response.getWriter().write(jsonString);
-
-        return ResponseEntity.ok().build();
+        return jwtResponseBuilder.buildJwtResponse(jwtToken, response);
     }
 
     /*이메일 체크 메서드*/
