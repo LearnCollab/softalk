@@ -19,6 +19,27 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id:
+            client-secret:
+            client-name: kakao
+            client-authentication-method: POST
+            redirect-uri: "http://learncollab-softalk.com/login/oauth2/code/kakao"
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
+
 jwt:
   secret:
   expirationHours:
