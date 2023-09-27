@@ -55,7 +55,7 @@ public class JwtTokenProvider {
          *
          * 페이로드 차례로
          * sub: 주제(사용자 이름), auth: 권한 정보, iss: 발행자
-         * iat: 발행 시간, exp: 만로 시간
+         * iat: 발행 시간, exp: 만료 시간
          * */
 
         String accessToken = Jwts.builder()

@@ -1,5 +1,7 @@
 package com.learncollab.softalk.web.security.config;
 
+import com.learncollab.softalk.web.security.handler.OAuth2SuccessHandler;
+import com.learncollab.softalk.web.service.CustomOAuth2UserService;
 import com.learncollab.softalk.web.security.JwtTokenProvider;
 import com.learncollab.softalk.web.security.filter.JwtAuthenticationFilter;
 import jakarta.servlet.DispatcherType;
@@ -19,8 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join"};
+    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join", "/oauth2/authorization/kakao",  "/login/oauth2/code/kakao"};
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,11 +37,16 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable().httpBasic().disable()
-
                 .authorizeHttpRequests(request -> request
-                .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                .requestMatchers(allowedUrls).permitAll()
-                .anyRequest().authenticated())
+                    .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
+                    .requestMatchers(allowedUrls).permitAll()
+                    .anyRequest().authenticated())
+                .oauth2Login()
+                    .userInfoEndpoint()
+                        .userService(customOAuth2UserService)
+                    .and()
+                    .successHandler(successHandler)
+                .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 //                .logout(withDefaults());
 
