@@ -40,10 +40,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
+        //TODO
+        //FIXME
+        // - null 값 들어올 경우 예외처리 추가하기
         String registrationId = (String) attributes.get("registrationId");
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
         String email = (String) account.get("email");
-        Map<String, Object> profile =  (Map<String, Object>) attributes.get("profile");
+        Map<String, Object> profile =  (Map<String, Object>) account.get("profile");
         String name = (String) profile.get("nickname");
 
         return new OAuth2UserAttributes(email, name, registrationId);
