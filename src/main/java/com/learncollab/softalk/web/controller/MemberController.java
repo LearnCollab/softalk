@@ -1,6 +1,7 @@
 package com.learncollab.softalk.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learncollab.softalk.domain.dto.member.EmailVerificationReqDto;
 import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.dto.member.JwtToken;
 import com.learncollab.softalk.domain.dto.member.LoginResDto;
@@ -10,11 +11,13 @@ import com.learncollab.softalk.web.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import static com.learncollab.softalk.exception.ExceptionType.*;
 
@@ -24,6 +27,13 @@ import static com.learncollab.softalk.exception.ExceptionType.*;
 public class MemberController {
 
     private final MemberService memberService;
+
+    /*이메일 인증번호 전송 API*/
+    @PostMapping("/email/code-request")
+    public ResponseEntity<String> requestVerificationCode(@Valid @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
+        memberService.sendCodeToEmail(request);
+        return ResponseEntity.ok("인증번호 발송 성공");
+    }
 
     /*회원 가입 API*/
     @PostMapping("/join")

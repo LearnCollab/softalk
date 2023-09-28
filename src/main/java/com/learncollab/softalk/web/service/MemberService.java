@@ -1,5 +1,6 @@
 package com.learncollab.softalk.web.service;
 
+import com.learncollab.softalk.domain.dto.member.EmailVerificationReqDto;
 import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.dto.member.JwtToken;
 import com.learncollab.softalk.domain.entity.Member;
@@ -16,7 +17,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +33,11 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder encoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+
+    /*이메일 인증번호 전송*/
+    public void sendCodeToEmail(EmailVerificationReqDto.sendCodeRequest request) {
+        //TODO 이메일 인증번호 전송 로직 구현
+    }
 
     /*회원 가입 - 패스워드 인코딩 후 저장*/
     public void save(JoinDto joinDto) {
