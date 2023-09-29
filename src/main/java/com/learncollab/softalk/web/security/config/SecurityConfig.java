@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
     private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join",
-            "/auth/email/code-request"};
+            "/auth/email/code-request", "/auth/email/code-verification"};
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean

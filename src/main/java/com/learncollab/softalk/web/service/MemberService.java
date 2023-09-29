@@ -28,8 +28,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static com.learncollab.softalk.exception.ExceptionType.EMAIL_ALREADY_EXIST;
-import static com.learncollab.softalk.exception.ExceptionType.VERIFICATION_CODE_GENERATION_ERROR;
+import static com.learncollab.softalk.exception.ExceptionType.*;
 
 
 @Service
@@ -73,6 +72,15 @@ public class MemberService implements UserDetailsService {
             return builder.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new MemberException(VERIFICATION_CODE_GENERATION_ERROR);
+        }
+    }
+
+    /*이메일 인증번호 검증*/
+    public void verifyCode(EmailVerificationReqDto.verifyCodeRequest request) {
+        String redisAuthCode = redisService.getCode(request.getEmail());
+        boolean authResult = redisAuthCode.equals(request.getCode());
+        if(authResult == false){
+            throw new MemberException(VERIFICATION_CODE_MISMATCH);
         }
     }
 

@@ -30,9 +30,18 @@ public class MemberController {
 
     /*이메일 인증번호 전송 API*/
     @PostMapping("/email/code-request")
-    public ResponseEntity<String> requestVerificationCode(@Valid @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
+    public ResponseEntity<String> requestVerificationCode(
+            @Valid @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
         memberService.sendCodeToEmail(request);
         return ResponseEntity.ok("인증번호 발송 성공");
+    }
+
+    /*이메일 인증번호 검증 API*/
+    @PostMapping("/email/code-verification")
+    public ResponseEntity<String> verifyVerificationCode(
+            @Valid @RequestBody EmailVerificationReqDto.verifyCodeRequest request) {
+        memberService.verifyCode(request);
+        return ResponseEntity.ok("인증번호 확인 성공");
     }
 
     /*회원 가입 API*/
