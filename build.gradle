@@ -31,11 +31,12 @@ dependencies {
 
 	//이메일 인증
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
-	implementation 'javax.mail:javax.mail-api:1.6.2'
+	implementation 'javax.mail:javax.mail-api:1.7.2'
 
 	//Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'

@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join"};
+    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join",
+            "/auth/email/code-request"};
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean

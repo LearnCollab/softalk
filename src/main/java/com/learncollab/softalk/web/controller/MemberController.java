@@ -12,12 +12,12 @@ import com.learncollab.softalk.web.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 import static com.learncollab.softalk.exception.ExceptionType.*;
 
