@@ -5,6 +5,7 @@ import com.learncollab.softalk.domain.dto.member.JwtToken;
 import com.learncollab.softalk.domain.dto.member.LoginResDto;
 import com.learncollab.softalk.domain.dto.member.OAuth2UserAttributes;
 import com.learncollab.softalk.domain.event.OAuth2UserRegisteredEvent;
+import com.learncollab.softalk.web.security.JwtResponseBuilder;
 import com.learncollab.softalk.web.security.JwtTokenProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,9 @@ import java.util.Map;
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtResponseBuilder jwtResponseBuilder;
     private final ApplicationEventPublisher eventPublisher; // 이벤트 발행기
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -33,7 +36,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
-        sendJwtTokenResponse(response, jwtToken);
+        jwtResponseBuilder.buildJwtResponse(jwtToken, response);
     }
 
     public OAuth2UserAttributes extractOAuth2UserAttributes(Authentication authentication){
@@ -65,17 +68,4 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     }
 
-    public void sendJwtTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException {
-        String grantType = jwtToken.getGrantType();
-        String accessToken = jwtToken.getAccessToken();
-        String refreshToken = jwtToken.getRefreshToken();
-
-        response.addHeader("Authorization", grantType + " " + accessToken);
-
-        LoginResDto loginResDto = new LoginResDto(refreshToken);
-        response.setContentType("application/json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(loginResDto);
-        response.getWriter().write(jsonString);
-    }
 }

@@ -42,6 +42,7 @@ public class SecurityConfig {
                     .requestMatchers(allowedUrls).permitAll()
                     .anyRequest().authenticated())
                 .oauth2Login()
+                    .loginPage("/login")
                     .userInfoEndpoint()
                         .userService(customOAuth2UserService)
                     .and()

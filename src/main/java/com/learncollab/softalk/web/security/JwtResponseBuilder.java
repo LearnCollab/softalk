@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public class JwtResponseBuilder {
 
-    public ResponseEntity<Void> buildJwtResponse(JwtToken jwtToken, HttpServletResponse response) throws IOException {
+    public void buildJwtResponse(JwtToken jwtToken, HttpServletResponse response) throws IOException {
         String grantType = jwtToken.getGrantType();
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
@@ -24,7 +24,5 @@ public class JwtResponseBuilder {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(loginResDto);
         response.getWriter().write(jsonString);
-
-        return ResponseEntity.ok().build();
     }
 }
