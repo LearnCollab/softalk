@@ -85,6 +85,11 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String accessToken){
+
+        if (!validateToken(accessToken)) {
+            throw new RuntimeException("토큰이 유효하지 않습니다.");
+        }
+
         Claims claims = parseClaims(accessToken);
 
         if(claims.get("auth") == null){
@@ -117,11 +122,7 @@ public class JwtTokenProvider {
     }
 
     public Claims parseClaims(String accessToken){
-        try{
-            return Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(accessToken).getBody();
-        }catch(ExpiredJwtException e){
-            return e.getClaims();
-        }
+        return Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(accessToken).getBody();
     }
 
 }
