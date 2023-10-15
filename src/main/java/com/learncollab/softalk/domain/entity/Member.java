@@ -27,6 +27,12 @@ public class Member{
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Community> createdCommunities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<CommunityMember> cm_members = new ArrayList<>();
+
     public Member(JoinDto joinDto, PasswordEncoder encoder) {
         this.password = encoder.encode(joinDto.getPassword());
         this.email = joinDto.getEmail();

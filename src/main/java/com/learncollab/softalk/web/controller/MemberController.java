@@ -47,13 +47,13 @@ public class MemberController {
 
     /*일반 로그인 처리 로직*/
     @PostMapping("/login")
-    public ResponseEntity<Void> login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         JwtToken jwtToken = authenticationService.authenticateAndGenerateToken(email, password);
 
-        return jwtResponseBuilder.buildJwtResponse(jwtToken, response);
+        jwtResponseBuilder.buildJwtResponse(jwtToken, response);
     }
 
     /*이메일 체크 메서드*/
