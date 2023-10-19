@@ -108,7 +108,7 @@ public class MemberController {
     @PostMapping("/email/code-request")
     public ResponseEntity<String> requestVerificationCode(
             @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
-        // TODO memberService.sendCodeToEmail(request);
+        memberService.sendCodeToEmail(request);
         return ResponseEntity.ok("인증번호 발송 성공");
     }
 
