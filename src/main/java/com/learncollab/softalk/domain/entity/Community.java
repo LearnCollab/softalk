@@ -1,11 +1,19 @@
 package com.learncollab.softalk.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Community extends BaseTime {
     @Id
     @GeneratedValue
