@@ -44,7 +44,8 @@ public enum ExceptionType {
     /*커뮤니티 내 게시글 예외*/
     NO_SUCH_POST(NOT_FOUND, 30001, "존재하지 않는 게시글입니다."),
     NO_PERMISSION(FORBIDDEN, 30002, "해당 게시글에 대한 권한이 없습니다."),
-    COMMUNITY_POST_MISMATCH(BAD_REQUEST, 30003, "커뮤니티와 게시글이 일치하지 않습니다.");
+    COMMUNITY_POST_MISMATCH(BAD_REQUEST, 30003, "커뮤니티와 게시글이 일치하지 않습니다."),
+    INVALID_VALUE(BAD_REQUEST, 30004, "잘못된 입력값입니다.");
 
     private final HttpStatus httpStatus;
     private final int code;

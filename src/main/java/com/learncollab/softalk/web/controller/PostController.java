@@ -2,6 +2,7 @@ package com.learncollab.softalk.web.controller;
 
 import com.learncollab.softalk.domain.dto.post.PostReqDto;
 import com.learncollab.softalk.web.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class PostController {
 
     @PostMapping("/{communityId}")
     public ResponseEntity<Void> createPost(@PathVariable("communityId") Long communityId,
-                                           @RequestBody PostReqDto request){
+                                           @Valid @RequestBody PostReqDto request){
         postService.createPost(communityId, request);
         return ResponseEntity.ok().build();
     }
