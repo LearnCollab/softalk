@@ -21,6 +21,14 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{communityId}/{postId}")
+    public ResponseEntity<Void> updatePost(@Valid @RequestBody PostReqDto request,
+                                           @PathVariable("communityId") Long communityId,
+                                           @PathVariable("postId") Long postId){
+        postService.updatePost(request, communityId, postId);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{communityId}/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable("communityId") Long communityId,
                                            @PathVariable("postId") Long postId){

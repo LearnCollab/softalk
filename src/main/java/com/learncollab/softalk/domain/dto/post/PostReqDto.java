@@ -20,7 +20,7 @@ public class PostReqDto {
         return Post.builder()
                 .writer(writer)
                 .community(community)
-                .title(title)
+                .title((title != null && !title.trim().isEmpty()) ? title.trim() : "제목없음")
                 .content(content)
                 .build();
     }
