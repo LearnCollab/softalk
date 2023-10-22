@@ -28,9 +28,8 @@ public enum ExceptionType {
     VERIFICATION_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, 10020, "이메일 인증번호 검증 오류가 발생했습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, 10021, "사용자를 찾을 수 없습니다."),
     MEMBER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, 10022, "사용자에게 접근 권한이 없습니다."),
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, 10023, "인증되지 않은 사용자입니다."),
 
-    //커뮤니티
-    COMMUNITY_NOT_FOUND(HttpStatus.NOT_FOUND, 20011, "존재하지 않는 커뮤니티입니다."),
 
     /*커뮤니티 관련 예외*/
     CATEGORY_RANGE_ERR(BAD_REQUEST, 20001, "카테고리 범위에 해당되지 않는 요청값입니다."),

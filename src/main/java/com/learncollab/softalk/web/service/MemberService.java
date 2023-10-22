@@ -86,6 +86,15 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
         return findMemberByEmail(email).orElseThrow(() -> new MemberException(NO_SUCH_MEMBER, NO_SUCH_MEMBER.getCode(), NO_SUCH_MEMBER.getErrorMessage()));
     }
 
+    public Member findLoginMember(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null){
+            String email = authentication.getName();
+            return findMemberByEmail(email).orElseThrow(() -> new MemberException(NO_SUCH_MEMBER, NO_SUCH_MEMBER.getCode(), NO_SUCH_MEMBER.getErrorMessage()));
+        }
+        throw new MemberException(UNAUTHORIZED_ACCESS, UNAUTHORIZED_ACCESS.getCode(), UNAUTHORIZED_ACCESS.getErrorMessage());
+    }
+
     /*
     * //implements UserDetailsService
     * 스프링 시큐리티가
