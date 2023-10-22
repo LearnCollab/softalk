@@ -44,6 +44,12 @@ public class Community extends BaseTime {
     @OneToMany(mappedBy = "community")
     private List<CommunityMember> cm_members = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "community",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private List<CmImage> image = new ArrayList<>();
 
     public Community(CommunityDto communityDto) {
         this.cm_name = communityDto.getCm_name();

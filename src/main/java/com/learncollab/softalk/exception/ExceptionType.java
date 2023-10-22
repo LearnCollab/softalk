@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Getter
 @RequiredArgsConstructor
@@ -31,7 +32,13 @@ public enum ExceptionType {
     CM_TYPE_RAGE_ERR(BAD_REQUEST, 20004, "커뮤니티 타입 범위에 해당되지 않는 요청값입니다."),
     CM_MEMBER_RANGE_ERR(BAD_REQUEST, 20005, "커뮤니티 멤버 수 범위에 해당되지 않는 요청값입니다."),
     NO_SUCH_Community(BAD_REQUEST, 20006, "존재하지 않는 커뮤니티입니다."),
-    PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다.");
+    PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다."),
+
+    /*파일 관련 예외*/
+    FILE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, 30001, "파일 업로드 중 오류가 발생하였습니다."),
+    FILE_DELETE_FAILED(INTERNAL_SERVER_ERROR, 30002, "이미지 삭제 중 오류가 발생하였습니다."),
+    S3_ERROR(INTERNAL_SERVER_ERROR, 30003, "S3 서비스와 통신 중 오류가 발생했습니다.");
+
 
 
     private final HttpStatus httpStatus;

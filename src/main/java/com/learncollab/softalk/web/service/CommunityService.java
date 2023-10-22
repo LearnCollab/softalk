@@ -2,15 +2,18 @@ package com.learncollab.softalk.web.service;
 
 import com.learncollab.softalk.domain.dto.community.CommunityDto;
 import com.learncollab.softalk.domain.dto.community.CommunityListResDto;
+import com.learncollab.softalk.domain.entity.CmImage;
 import com.learncollab.softalk.domain.entity.Community;
 import com.learncollab.softalk.domain.entity.Member;
 import com.learncollab.softalk.exception.community.CommunityException;
 import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.CommunityRepositoryImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +27,11 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityRepositoryImpl communityRepositoryImpl;
     private final MemberService memberService;
+    private final CmImageService cmImageService;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
+    private final String bucketDirName = "community";
 
 
     /*커뮤니티 리스트*/
@@ -50,8 +58,28 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
-    /*새로운 커뮤니티 생성*/
-    public void create(Authentication authentication, CommunityDto communityDto){
+    /*새로운 커뮤니티 생성 (사용자가 직접 이미지 추가)*/
+    public void createWithImage(Authentication authentication, CommunityDto communityDto, List<MultipartFile> multipartFiles){
+        CommunityDto communityDto1 = setCommunityDto(authentication, communityDto);
+        Community community = communityRepository.save(new Community(communityDto1));
+
+        //이미지 파일을 S3에 저장
+        List<CmImage> imageList = cmImageService.uploadCmImage(multipartFiles, bucketName, bucketDirName);
+
+        //이미지 파일을 DB에 저장
+        if(!imageList.isEmpty()) {
+            for(CmImage image : imageList) {
+                cmImageService.saveCmImage(image, community);
+            }
+        }
+
+//        List<String> imgUrls = community.getImage().stream()
+//                .map(CmImage::getImageUrl)
+//                .collect(Collectors.toList());
+    }
+
+    /*새로운 커뮤니티 생성 (사용자 이미지 추가x)*/
+    public void createWithoutImage(Authentication authentication, CommunityDto communityDto){
         CommunityDto communityDto1 = setCommunityDto(authentication, communityDto);
         Community community = communityRepository.save(new Community(communityDto1));
     }
@@ -71,6 +99,13 @@ public class CommunityService {
         Community community = findCommunity(communityId);
 
         checkCommunityPermisstion(member, community);
+
+        //이미지 s3에서 삭제
+        List<CmImage> images = community.getImage();
+        for (CmImage image : images) {
+            cmImageService.deleteCmImage(bucketName, image.getS3key());
+        }
+
         communityRepository.delete(community);
     }
 
@@ -88,7 +123,7 @@ public class CommunityService {
     }
 
     /*커뮤니티 검색*/
-    public List<CommunityListResDto> searchPosts(Integer state, Integer category, String keyword) {
+    public List<CommunityListResDto> searchCommunity(Integer state, Integer category, String keyword) {
         List<Community> communityList = communityRepositoryImpl.searchCommunity(state, category, keyword);
 
         return convertToCommunityListResDto(communityList);
