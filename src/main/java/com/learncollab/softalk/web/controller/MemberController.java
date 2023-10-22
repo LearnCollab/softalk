@@ -12,7 +12,10 @@ import com.learncollab.softalk.web.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import static com.learncollab.softalk.exception.ExceptionType.*;
 
 @RestController
+@Slf4j
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class MemberController {
@@ -55,6 +59,25 @@ public class MemberController {
         JwtToken jwtToken = authenticationService.authenticateAndGenerateToken(email, password);
 
         jwtResponseBuilder.buildJwtResponse(jwtToken, response);
+    }
+
+    @GetMapping("/token-check")
+    public String checkToken(Authentication authentication, @AuthenticationPrincipal Object principal) {
+        if (authentication != null) {
+            // Authentication 객체에서 사용자 이름과 권한 정보를 추출
+            String username = authentication.getName();
+            String authorities = authentication.getAuthorities().toString();
+
+            // 로그로 출력
+            log.info("사용자 이름: {}", username);
+            log.info("권한 정보: {}", authorities);
+
+            // 응답 메시지 반환
+            return "토큰 확인 완료: 사용자 이름 - " + username + ", 권한 - " + authorities;
+        } else {
+            log.info("Authentication 객체가 null입니다.");
+            return "토큰 확인 실패: 사용자가 로그인하지 않았습니다.";
+        }
     }
 
     /*이메일 체크 메서드*/

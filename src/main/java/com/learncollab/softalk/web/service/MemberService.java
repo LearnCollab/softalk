@@ -74,6 +74,17 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
         return memberRepository.findByName(name);
     }
 
+    /*authentication 객체로 현재 로그인 멤버 찾기*/
+    public Optional<Member> findMemberByAuthentication(Authentication authentication) {
+        String email = authentication.getName();
+        return findMemberByEmail(email);
+    }
+
+    /*로그인 유저 확인, 반환*/
+    public Member findLoginMember(Authentication authentication){
+        String email = authentication.getName();
+        return findMemberByEmail(email).orElseThrow(() -> new MemberException(NO_SUCH_MEMBER, NO_SUCH_MEMBER.getCode(), NO_SUCH_MEMBER.getErrorMessage()));
+    }
 
     /*
     * //implements UserDetailsService

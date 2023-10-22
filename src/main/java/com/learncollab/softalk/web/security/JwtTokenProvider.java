@@ -13,9 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,6 +53,7 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+
         /*Access Token 생성
          *
          * 페이로드 차례로
@@ -68,7 +71,7 @@ public class JwtTokenProvider {
                 )
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS)))
+                .setExpiration(Date.from(LocalDateTime.now().plusHours(expirationHours).atZone(ZoneId.systemDefault()).toInstant()))
                 .compact();
 
         //Refresh Token 생성
@@ -87,6 +90,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken){
 
         if (!validateToken(accessToken)) {
+            log.error("토큰 검증 실패: {}", accessToken);
             throw new RuntimeException("토큰이 유효하지 않습니다.");
         }
 
@@ -107,7 +111,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token){
         try{
-            Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJwt(token);
+            Jwts.parserBuilder().setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)).build().parseClaimsJws(token);
             return true;
         }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
             log.info("Invalid JWT Token", e);
@@ -122,7 +126,8 @@ public class JwtTokenProvider {
     }
 
     public Claims parseClaims(String accessToken){
-        return Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(accessToken).getBody();
+        return
+        Jwts.parserBuilder().setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)).build().parseClaimsJws(accessToken).getBody();
     }
 
 }
