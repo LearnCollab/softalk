@@ -18,8 +18,12 @@ public enum ExceptionType {
     PASSWORD_EMPTY(BAD_REQUEST, 10014, "비밀번호는 필수 입력값입니다."),
     PASSWORD_INVALID(BAD_REQUEST, 10015, "7-16자의 영문 대소문자, 숫자, 특수문자 ((!), (_) , (-))를 포합해야합니다."),
     NAME_EMPTY(BAD_REQUEST, 10016, "닉네임은 필수 입력값입니다."),
-    NAME_ALREADY_EXIST(BAD_REQUEST, 10017, "이미 존재하는 닉네임입니다.");
+    NAME_ALREADY_EXIST(BAD_REQUEST, 10017, "이미 존재하는 닉네임입니다."),
 
+    CATEGORY_RANGE_ERR(BAD_REQUEST, 20001, "카테고리 범위에 해당되지 않는 요청값입니다."),
+    STATE_RANGE_ERR(BAD_REQUEST, 20001, "상태 범위에 해당되지 않는 요청값입니다.");
+
+    /*커뮤니티 관련 예외*/
 
     private final HttpStatus httpStatus;
     private final int code;
