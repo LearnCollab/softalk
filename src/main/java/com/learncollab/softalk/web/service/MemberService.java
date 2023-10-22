@@ -12,7 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +27,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static com.learncollab.softalk.exception.ExceptionType.EMAIL_ALREADY_EXIST;
-import static com.learncollab.softalk.exception.ExceptionType.VERIFICATION_CODE_GENERATION_ERROR;
+import static com.learncollab.softalk.exception.ExceptionType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -127,5 +128,20 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
         } catch (NoSuchAlgorithmException e) {
             throw new MemberException(VERIFICATION_CODE_GENERATION_ERROR, VERIFICATION_CODE_GENERATION_ERROR.getCode(), VERIFICATION_CODE_GENERATION_ERROR.getErrorMessage());
         }
+    }
+
+    /**
+     * 인증된 사용자 정보 가져오기
+     */
+    public Member getMember() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String email = userDetails.getUsername();
+            Member member = memberRepository.findByEmail(email)
+                    .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND, MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getErrorMessage()));
+            return member;
+        }
+        throw new MemberException(MEMBER_NOT_AUTHENTICATED, MEMBER_NOT_AUTHENTICATED.getCode(), MEMBER_NOT_AUTHENTICATED.getErrorMessage());
     }
 }
