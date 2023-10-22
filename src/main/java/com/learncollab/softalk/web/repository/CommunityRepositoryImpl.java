@@ -23,11 +23,6 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom{
     }
 
     @Override
-    public List<Community> searchCommunity(Integer state, Integer category, String cm_name) {
-        return null;
-    }
-
-    @Override
     public List<Community> communityMainList(Integer state, Integer category) {
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -44,4 +39,27 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom{
                 .orderBy(community.createdAt.desc())
                 .fetch();
     }
+
+    @Override
+    public List<Community> searchCommunity(Integer state, Integer category, String keyword) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (state != null) {
+            builder.and(community.state.eq(state));
+        }
+
+        if (category != null) {
+            builder.and(community.category.eq(category));
+        }
+
+        if (keyword != null && !keyword.isEmpty()) {
+            builder.and(community.cm_name.toLowerCase().like("%" + keyword.toLowerCase() + "%"));
+        }
+
+        return queryFactory.selectFrom(community)
+                .where(builder)
+                .orderBy(community.createdAt.desc())
+                .fetch();
+    }
+
 }

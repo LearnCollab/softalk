@@ -29,19 +29,7 @@ public class CommunityController {
             @RequestParam(required = false) Integer category,
             HttpServletRequest request) {
 
-        //커뮤니티 상태 범위 오류
-        if (!(state == null)) {
-            if (state < 0 || state > 1) {
-                throw new CommunityException(STATE_RANGE_ERR, STATE_RANGE_ERR.getCode(), STATE_RANGE_ERR.getErrorMessage());
-            }
-        }
-
-        //카테고리 범위 오류
-        if (!(category == null)) {
-            if (category < 0 || category > 3) {
-                throw new CommunityException(CATEGORY_RANGE_ERR, CATEGORY_RANGE_ERR.getCode(), CATEGORY_RANGE_ERR.getErrorMessage());
-            }
-        }
+        checkParams(state, category);
 
         /*카테고리 선택에 맞는 게시글 리스트*/
         return communityService.communityList(state, category);
@@ -88,4 +76,34 @@ public class CommunityController {
 
         communityService.deleteCommunity(communityId, authentication);
     }
+
+    /*커뮤니티 검색*/
+    @GetMapping("/search")
+    public List<CommunityListResDto> search(
+            @RequestParam String keyword,
+            @RequestParam(required = false) Integer state,
+            @RequestParam(required = false) Integer category,
+            HttpServletRequest request) {
+
+        checkParams(state, category);
+
+        return communityService.searchPosts(state, category, keyword);
+    }
+
+    public void checkParams(Integer state, Integer category) {
+        //커뮤니티 상태 범위 오류
+        if (!(state == null)) {
+            if (state < 0 || state > 1) {
+                throw new CommunityException(STATE_RANGE_ERR, STATE_RANGE_ERR.getCode(), STATE_RANGE_ERR.getErrorMessage());
+            }
+        }
+
+        //카테고리 범위 오류
+        if (!(category == null)) {
+            if (category < 0 || category > 3) {
+                throw new CommunityException(CATEGORY_RANGE_ERR, CATEGORY_RANGE_ERR.getCode(), CATEGORY_RANGE_ERR.getErrorMessage());
+            }
+        }
+    }
+
 }

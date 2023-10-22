@@ -19,6 +19,7 @@ import static com.learncollab.softalk.exception.ExceptionType.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityRepositoryImpl communityRepositoryImpl;
@@ -26,7 +27,6 @@ public class CommunityService {
 
 
     /*커뮤니티 리스트*/
-    @Transactional
     public List<CommunityListResDto> communityList(Integer state, Integer category){
 
         List<Community> communityList = communityRepositoryImpl.communityMainList(state, category);
@@ -36,7 +36,6 @@ public class CommunityService {
 
 
     /*community 객체를 CommunityListResDto 객체로 변환*/
-    @Transactional
     public List<CommunityListResDto> convertToCommunityListResDto(List<Community> communityList) {
         return communityList.stream()
                 .map(community -> new CommunityListResDto(
@@ -86,6 +85,13 @@ public class CommunityService {
         if(!community.getManager().getId().equals(member.getId())){
             throw new CommunityException(PERMISSION_DENIED, PERMISSION_DENIED.getCode(), PERMISSION_DENIED.getErrorMessage());
         }
+    }
+
+    /*커뮤니티 검색*/
+    public List<CommunityListResDto> searchPosts(Integer state, Integer category, String keyword) {
+        List<Community> communityList = communityRepositoryImpl.searchCommunity(state, category, keyword);
+
+        return convertToCommunityListResDto(communityList);
     }
 
 
