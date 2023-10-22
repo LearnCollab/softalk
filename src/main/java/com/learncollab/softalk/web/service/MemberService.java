@@ -5,6 +5,7 @@ import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.entity.Member;
 import com.learncollab.softalk.domain.event.OAuth2UserRegisteredEvent;
 import com.learncollab.softalk.exception.member.MemberException;
+import com.learncollab.softalk.exception.post.PostException;
 import com.learncollab.softalk.web.email.MailService;
 import com.learncollab.softalk.web.email.RedisService;
 import com.learncollab.softalk.web.repository.MemberRepository;
@@ -147,6 +148,15 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
             return builder.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new MemberException(VERIFICATION_CODE_GENERATION_ERROR, VERIFICATION_CODE_GENERATION_ERROR.getCode(), VERIFICATION_CODE_GENERATION_ERROR.getErrorMessage());
+        }
+    }
+
+    /*이메일 인증번호 검증*/
+    public void verifyCode(EmailVerificationReqDto.verifyCodeRequest request) {
+        String redisAuthCode = redisService.getCode(request.getEmail());
+        boolean authResult = redisAuthCode.equals(request.getCode().trim());
+        if(authResult == false){
+            throw new MemberException(VERIFICATION_CODE_MISMATCH, VERIFICATION_CODE_MISMATCH.getCode(), VERIFICATION_CODE_MISMATCH.getErrorMessage());
         }
     }
 

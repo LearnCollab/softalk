@@ -21,7 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join", "/oauth2/authorization/kakao",  "/login/oauth2/code/kakao"};
+    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join", "/oauth2/authorization/kakao",  "/login/oauth2/code/kakao",
+        "/auth/email/code-request", "/auth/email/code-verification"};
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler successHandler;

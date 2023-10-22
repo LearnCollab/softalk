@@ -136,4 +136,12 @@ public class MemberController {
         return ResponseEntity.ok("인증번호 발송 성공");
     }
 
+    /*이메일 인증번호 검증 API*/
+    @PostMapping("/email/code-verification")
+    public ResponseEntity<String> verifyVerificationCode(
+            @Valid @RequestBody EmailVerificationReqDto.verifyCodeRequest request) {
+        memberService.verifyCode(request);
+        return ResponseEntity.ok("인증번호 확인 성공");
+    }
+
 }
