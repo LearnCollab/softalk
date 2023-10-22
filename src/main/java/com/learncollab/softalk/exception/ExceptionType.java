@@ -3,7 +3,8 @@ package com.learncollab.softalk.exception;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public enum ExceptionType {
   
     VERIFICATION_CODE_GENERATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 10018, "이메일 인증번호 생성 오류가 발생했습니다."),
     EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 10019, "이메일 인증번호 발송 오류가 발생했습니다."),
-    VERIFICATION_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, 10020, "이메일 인증번호 검증 오류가 발생했습니다."),
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, 10021, "사용자를 찾을 수 없습니다."),
+    VERIFICATION_CODE_NOT_FOUND(NOT_FOUND, 10020, "이메일 인증번호 검증 오류가 발생했습니다."),
+    MEMBER_NOT_FOUND(NOT_FOUND, 10021, "사용자를 찾을 수 없습니다."),
     MEMBER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, 10022, "사용자에게 접근 권한이 없습니다."),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, 10023, "인증되지 않은 사용자입니다."),
 
@@ -38,7 +39,12 @@ public enum ExceptionType {
     CM_TYPE_RAGE_ERR(BAD_REQUEST, 20004, "커뮤니티 타입 범위에 해당되지 않는 요청값입니다."),
     CM_MEMBER_RANGE_ERR(BAD_REQUEST, 20005, "커뮤니티 멤버 수 범위에 해당되지 않는 요청값입니다."),
     NO_SUCH_Community(BAD_REQUEST, 20006, "존재하지 않는 커뮤니티입니다."),
-    PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다.");
+    PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다."),
+
+    /*커뮤니티 내 게시글 예외*/
+    NO_SUCH_POST(NOT_FOUND, 30001, "존재하지 않는 게시글입니다."),
+    NO_PERMISSION(FORBIDDEN, 30002, "해당 게시글에 대한 권한이 없습니다."),
+    COMMUNITY_POST_MISMATCH(BAD_REQUEST, 30003, "커뮤니티와 게시글이 일치하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
