@@ -1,6 +1,6 @@
 package com.learncollab.softalk.web.service;
 
-import com.learncollab.softalk.domain.dto.member.PostReqDto;
+import com.learncollab.softalk.domain.dto.post.PostReqDto;
 import com.learncollab.softalk.domain.entity.Community;
 import com.learncollab.softalk.domain.entity.Member;
 import com.learncollab.softalk.domain.entity.Post;
@@ -8,7 +8,6 @@ import com.learncollab.softalk.exception.community.CommunityException;
 import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import static com.learncollab.softalk.exception.ExceptionType.NO_SUCH_Community;

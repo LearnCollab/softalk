@@ -1,4 +1,4 @@
-package com.learncollab.softalk.domain.dto.member;
+package com.learncollab.softalk.domain.dto.post;
 
 import com.learncollab.softalk.domain.entity.Community;
 import com.learncollab.softalk.domain.entity.Member;

@@ -1,6 +1,6 @@
 package com.learncollab.softalk.web.controller;
 
-import com.learncollab.softalk.domain.dto.member.PostReqDto;
+import com.learncollab.softalk.domain.dto.post.PostReqDto;
 import com.learncollab.softalk.web.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
