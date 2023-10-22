@@ -1,5 +1,6 @@
 package com.learncollab.softalk.web.controller;
 
+import com.learncollab.softalk.domain.dto.member.EmailVerificationReqDto;
 import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.dto.member.JwtToken;
 import com.learncollab.softalk.exception.member.MemberException;
@@ -123,6 +124,15 @@ public class MemberController {
         if (memberService.findMemberByName(name).isPresent()) {
             throw new MemberException(NAME_ALREADY_EXIST, NAME_ALREADY_EXIST.getCode(), NAME_ALREADY_EXIST.getErrorMessage());
         }
+    }
+
+
+    /*이메일 인증번호 전송 API*/
+    @PostMapping("/email/code-request")
+    public ResponseEntity<String> requestVerificationCode(
+            @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
+        memberService.sendCodeToEmail(request);
+        return ResponseEntity.ok("인증번호 발송 성공");
     }
 
 }

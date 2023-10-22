@@ -3,6 +3,7 @@ package com.learncollab.softalk.domain.entity;
 import com.learncollab.softalk.domain.dto.community.CommunityDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +12,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Community extends BaseTime {
     @Id
     @GeneratedValue
