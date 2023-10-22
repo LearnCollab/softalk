@@ -3,10 +3,12 @@ package com.learncollab.softalk.web.service;
 import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.entity.Member;
 import com.learncollab.softalk.domain.event.OAuth2UserRegisteredEvent;
+import com.learncollab.softalk.exception.member.MemberException;
 import com.learncollab.softalk.web.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.learncollab.softalk.exception.ExceptionType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +60,17 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
         return memberRepository.findByName(name);
     }
 
+    /*authentication 객체로 현재 로그인 멤버 찾기*/
+    public Optional<Member> findMemberByAuthentication(Authentication authentication) {
+        String email = authentication.getName();
+        return findMemberByEmail(email);
+    }
+
+    /*로그인 유저 확인, 반환*/
+    public Member findLoginMember(Authentication authentication){
+        String email = authentication.getName();
+        return findMemberByEmail(email).orElseThrow(() -> new MemberException(NO_SUCH_MEMBER, NO_SUCH_MEMBER.getCode(), NO_SUCH_MEMBER.getErrorMessage()));
+    }
 
     /*
     * //implements UserDetailsService

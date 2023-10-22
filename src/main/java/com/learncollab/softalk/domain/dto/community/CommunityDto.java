@@ -8,12 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CommunityListResDto {
+public class CommunityDto {
     private String cm_name;
     private Integer cm_type;
     private Integer members_limit;
     private Integer members_number;
-    private String manager;
     private Integer state;
     private Integer category;
+    private Member manager;
 }

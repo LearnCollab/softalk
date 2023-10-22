@@ -1,5 +1,6 @@
 package com.learncollab.softalk.domain.entity;
 
+import com.learncollab.softalk.domain.dto.community.CommunityDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,5 +43,16 @@ public class Community extends BaseTime {
 
     @OneToMany(mappedBy = "community")
     private List<CommunityMember> cm_members = new ArrayList<>();
+
+
+    public Community(CommunityDto communityDto) {
+        this.cm_name = communityDto.getCm_name();
+        this.cm_type = communityDto.getCm_type();
+        this.manager = communityDto.getManager();
+        this.members_limit = communityDto.getMembers_limit();
+        this.members_number = communityDto.getMembers_number();
+        this.category = communityDto.getCategory();
+        this.state = communityDto.getState();
+    }
 
 }

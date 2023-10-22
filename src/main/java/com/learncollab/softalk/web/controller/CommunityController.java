@@ -1,18 +1,16 @@
 package com.learncollab.softalk.web.controller;
 
+import com.learncollab.softalk.domain.dto.community.CommunityDto;
 import com.learncollab.softalk.domain.dto.community.CommunityListResDto;
 import com.learncollab.softalk.exception.community.CommunityException;
 import com.learncollab.softalk.web.service.CommunityService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+
+import java.io.IOException;
 import java.util.List;
 
 import static com.learncollab.softalk.exception.ExceptionType.*;
@@ -47,5 +45,41 @@ public class CommunityController {
 
         /*카테고리 선택에 맞는 게시글 리스트*/
         return communityService.communityList(state, category);
+    }
+
+    /*커뮤니티 생성 API*/
+    @PostMapping
+    public void createCommunity(
+            @RequestBody CommunityDto communityDto,
+            Authentication authentication,
+            HttpServletRequest request) throws IOException {
+
+        checkCommunityException(communityDto);
+
+        communityService.create(authentication, communityDto);
+    }
+
+
+
+    public void checkCommunityException(CommunityDto communityDto) {
+        //커뮤니티 이름 null
+        if(communityDto.getCm_name() == null){
+            throw new CommunityException(CM_NAME_EMPTY, CM_NAME_EMPTY.getCode(), CM_NAME_EMPTY.getErrorMessage());
+        }
+        //cm_type null 혹은 범위 오류
+        if(communityDto.getCm_type() == null || communityDto.getCm_type()<0 || communityDto.getCm_type()>1){
+            throw new CommunityException(CM_TYPE_RAGE_ERR, CM_TYPE_RAGE_ERR.getCode(), CM_TYPE_RAGE_ERR.getErrorMessage());
+        }
+        //TODO
+        //FIXME
+        // - 범위도 설정해야함
+        //members_limit null
+        if(communityDto.getMembers_limit() ==null){
+            throw new CommunityException(CM_MEMBER_RANGE_ERR, CM_MEMBER_RANGE_ERR.getCode(), CM_MEMBER_RANGE_ERR.getErrorMessage());
+        }
+        //카테고리 null 혹은 범위 오류
+        if(communityDto.getCategory() == null || communityDto.getCategory() < 0 || communityDto.getCategory() > 4){
+            throw new CommunityException(CATEGORY_RANGE_ERR, CATEGORY_RANGE_ERR.getCode(), CATEGORY_RANGE_ERR.getErrorMessage());
+        }
     }
 }
