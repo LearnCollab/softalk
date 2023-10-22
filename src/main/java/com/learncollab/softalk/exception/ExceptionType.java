@@ -27,10 +27,11 @@ public enum ExceptionType {
     /*커뮤니티 관련 예외*/
     CATEGORY_RANGE_ERR(BAD_REQUEST, 20001, "카테고리 범위에 해당되지 않는 요청값입니다."),
     STATE_RANGE_ERR(BAD_REQUEST, 20002, "상태 범위에 해당되지 않는 요청값입니다."),
-
     CM_NAME_EMPTY(BAD_REQUEST, 20003, "커뮤니티 제목은 필수 입력값입니다."),
     CM_TYPE_RAGE_ERR(BAD_REQUEST, 20004, "커뮤니티 타입 범위에 해당되지 않는 요청값입니다."),
-    CM_MEMBER_RANGE_ERR(BAD_REQUEST, 20005, "커뮤니티 멤버 수 범위에 해당되지 않는 요청값입니다.");
+    CM_MEMBER_RANGE_ERR(BAD_REQUEST, 20005, "커뮤니티 멤버 수 범위에 해당되지 않는 요청값입니다."),
+    NO_SUCH_Community(BAD_REQUEST, 20006, "존재하지 않는 커뮤니티입니다."),
+    PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다.");
 
 
     private final HttpStatus httpStatus;

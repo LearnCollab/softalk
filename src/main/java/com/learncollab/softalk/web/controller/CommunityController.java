@@ -59,8 +59,6 @@ public class CommunityController {
         communityService.create(authentication, communityDto);
     }
 
-
-
     public void checkCommunityException(CommunityDto communityDto) {
         //커뮤니티 이름 null
         if(communityDto.getCm_name() == null){
@@ -81,5 +79,13 @@ public class CommunityController {
         if(communityDto.getCategory() == null || communityDto.getCategory() < 0 || communityDto.getCategory() > 4){
             throw new CommunityException(CATEGORY_RANGE_ERR, CATEGORY_RANGE_ERR.getCode(), CATEGORY_RANGE_ERR.getErrorMessage());
         }
+    }
+
+    /*커뮤니티 삭제 API*/
+    @DeleteMapping("/{communityId}")
+    public void deleteCommunity(
+            @PathVariable Long communityId, Authentication authentication, HttpServletRequest request){
+
+        communityService.deleteCommunity(communityId, authentication);
     }
 }

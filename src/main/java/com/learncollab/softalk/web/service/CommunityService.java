@@ -4,6 +4,7 @@ import com.learncollab.softalk.domain.dto.community.CommunityDto;
 import com.learncollab.softalk.domain.dto.community.CommunityListResDto;
 import com.learncollab.softalk.domain.entity.Community;
 import com.learncollab.softalk.domain.entity.Member;
+import com.learncollab.softalk.exception.community.CommunityException;
 import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.CommunityRepositoryImpl;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.learncollab.softalk.exception.ExceptionType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +64,28 @@ public class CommunityService {
         communityDto.setMembers_number(1);
         communityDto.setState(0);
         return communityDto;
+    }
+
+    /*커뮤니티 삭제*/
+    public void deleteCommunity(Long communityId, Authentication authentication) {
+        Member member = memberService.findLoginMember(authentication);
+        Community community = findCommunity(communityId);
+
+        checkCommunityPermisstion(member, community);
+        communityRepository.delete(community);
+    }
+
+    /*커뮤니티 확인, 반환*/
+    public Community findCommunity(Long communityId){
+        return communityRepository.findById(communityId)
+                .orElseThrow(() -> new CommunityException(NO_SUCH_Community, NO_SUCH_Community.getCode(), NO_SUCH_Community.getErrorMessage()));
+    }
+
+    /*로그인 유저가 커뮤니티 매니저인지 확인*/
+    public void checkCommunityPermisstion(Member member, Community community){
+        if(!community.getManager().getId().equals(member.getId())){
+            throw new CommunityException(PERMISSION_DENIED, PERMISSION_DENIED.getCode(), PERMISSION_DENIED.getErrorMessage());
+        }
     }
 
 
