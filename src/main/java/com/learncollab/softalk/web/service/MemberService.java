@@ -130,18 +130,4 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
         }
     }
 
-    /**
-     * 인증된 사용자 정보 가져오기
-     */
-    public Member getMember() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String email = userDetails.getUsername();
-            Member member = memberRepository.findByEmail(email)
-                    .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND, MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getErrorMessage()));
-            return member;
-        }
-        throw new MemberException(MEMBER_NOT_AUTHENTICATED, MEMBER_NOT_AUTHENTICATED.getCode(), MEMBER_NOT_AUTHENTICATED.getErrorMessage());
-    }
 }

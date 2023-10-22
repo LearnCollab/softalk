@@ -3,19 +3,19 @@ package com.learncollab.softalk.web.controller;
 import com.learncollab.softalk.domain.dto.member.PostReqDto;
 import com.learncollab.softalk.web.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/softalk/community")
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping
-    public void createPost(@RequestBody PostReqDto request){
-        postService.createPost(request);
+    @PostMapping("/{communityId}")
+    public void createPost(@PathVariable("communityId") Long communityId,
+                           @RequestBody PostReqDto request){
+        postService.createPost(communityId, request);
     }
 
 
