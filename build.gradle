@@ -30,7 +30,6 @@ dependencies {
 
 	//이메일 인증
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'javax.mail:javax.mail-api:1.7.2'
 
 	//Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
