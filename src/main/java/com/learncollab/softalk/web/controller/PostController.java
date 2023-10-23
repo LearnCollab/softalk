@@ -1,6 +1,7 @@
 package com.learncollab.softalk.web.controller;
 
 import com.learncollab.softalk.domain.dto.post.PostReqDto;
+import com.learncollab.softalk.domain.dto.post.PostResDto;
 import com.learncollab.softalk.web.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,15 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping("/{communityId}")
+    public ResponseEntity<PostResDto.PostList> getPostList(
+            @PathVariable("communityId") Long communityId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "sortBy", defaultValue = "0") int sortBy //최신순
+    ){
+        return ResponseEntity.ok().body(postService.getPostList(communityId, page, sortBy));
+    }
 
     @PostMapping("/{communityId}")
     public ResponseEntity<Void> createPost(@PathVariable("communityId") Long communityId,
