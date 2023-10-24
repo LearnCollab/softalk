@@ -33,11 +33,14 @@ public class PostService {
     private final CommunityRepository communityRepository;
 
     // 게시글 목록 조회
-    public PostResDto.PostList getPostList(Long communityId, int type, int sortBy, Pageable pageable) {
+    public PostResDto.PostList getPostList(Long communityId, String type, int sortBy, Pageable pageable) {
         //로그인 여부 확인
         Long memberId = null;
         Member member = memberService.findLoginMember();
-        if(member != null){
+        if(type.equals("my-posts")){
+            if(member == null){
+                throw new PostException(MEMBER_NOT_AUTHENTICATED);
+            }
             memberId = member.getId();
         }
 

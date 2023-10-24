@@ -24,13 +24,13 @@ public class PostController {
     @GetMapping("/{communityId}")
     public ResponseEntity<PostResDto.PostList> getPostList(
             @PathVariable("communityId") Long communityId,
-            @RequestParam(value = "type", required = false, defaultValue = "0") int type, //전체 목록
+            @RequestParam(value = "type", required = false, defaultValue = "all-posts") String type, //전체 목록
             @RequestParam(value = "sortBy", required = false, defaultValue = "0") int sortBy, //최신순
-            Pageable pageable
-    ){
+            Pageable pageable){
+
         // query string 값 범위 확인
-        if (!(type == 0 || type == 1)){
-            throw new PostException(INVALID_VALUE, "type 값은 0(전체 목록) 또는 1(내가 쓴 게시글 목록)만 가능합니다.");
+        if (!(type.equals("all-posts") || type.equals("my-posts"))){
+            throw new PostException(INVALID_VALUE, "type 값은 all-posts(전체 목록) 또는 my-posts(내가 쓴 게시글 목록)만 가능합니다.");
         }
         if (!(sortBy == 0 || sortBy == 1)){
             throw new PostException(INVALID_VALUE, "sortBy 값은 0(최신순) 또는 1(오래된순)만 가능합니다.");

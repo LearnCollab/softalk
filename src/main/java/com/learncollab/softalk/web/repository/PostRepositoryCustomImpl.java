@@ -26,7 +26,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
      */
     @Override
     public Page<Post> getPostList(Pageable pageable,
-                                  Long communityId, int type, Long memberId, int sortBy) {
+                                  Long communityId, String type, Long memberId, int sortBy) {
         QueryResults<Post> results = queryFactory
                 .selectFrom(post)
                 .join(post.writer).fetchJoin()
@@ -49,8 +49,8 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
 
     // [type] 0(default): 전체 목록 / 1: 내가 작성한 게시글 목록
-    private BooleanExpression filterType(Integer type, Long memberId) {
-        return type == 1 ? post.writer.id.eq(memberId) : null;
+    private BooleanExpression filterType(String type, Long memberId) {
+        return type.equals("my-posts") ? post.writer.id.eq(memberId) : null;
     }
 
     // [sort]
