@@ -22,7 +22,7 @@ public class PostExceptionHandler {
 
     // Post Custom Exception
     @ExceptionHandler(PostException.class)
-    public ResponseEntity<ErrorResult> CommunityExceptionHandle(PostException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResult> handlePostCustomException(PostException e, HttpServletRequest request) {
         log.error("[CustomException] url: {} | errorType: {} | errorMessage: {} | cause Exception: {}",
                 request.getRequestURL(), e.getExceptionType(), e.getMessage(), e.getCause());
         ErrorResult errorResult = new ErrorResult(String.valueOf(e.getCode()), e.getErrorMessage());
