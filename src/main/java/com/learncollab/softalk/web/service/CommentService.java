@@ -14,6 +14,7 @@ import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.learncollab.softalk.exception.ExceptionType.*;
 
@@ -62,8 +63,19 @@ public class CommentService {
 
 
     // 댓글 수정
+    @Transactional
     public void updateComment(Long commentId, CommentReqDto.CommentUpdate request) {
-        // TODO 댓글 수정 로직 구현
+
+        //유저 인증
+        Member writer = memberService.findLoginMember();
+        if(writer == null){
+            throw new MemberException(UNAUTHORIZED_ACCESS, UNAUTHORIZED_ACCESS.getCode(), UNAUTHORIZED_ACCESS.getErrorMessage());
+        }
+
+        //댓글 존재 확인 및 수정
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(NO_SUCH_COMMENT));
+        comment.updateComment(request.getContent());
     }
 
 
