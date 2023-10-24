@@ -16,8 +16,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Void> createComment(@Valid @RequestBody CommentReqDto request){
+    public ResponseEntity<Void> createComment(@Valid @RequestBody CommentReqDto.CommentCreate request){
         commentService.createComment(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(@PathVariable("commentId") Long commentId,
+                                              @Valid @RequestBody CommentReqDto.CommentUpdate request){
+        commentService.updateComment(commentId, request);
         return ResponseEntity.ok().build();
     }
 

@@ -28,7 +28,7 @@ public class CommentService {
 
 
     // 댓글 등록
-    public void createComment(CommentReqDto request) {
+    public void createComment(CommentReqDto.CommentCreate request) {
 
         //유저 인증
         Member writer = memberService.findLoginMember();
@@ -59,4 +59,12 @@ public class CommentService {
         Comment comment = request.toEntity(writer, community, post, parentComment);
         commentRepository.save(comment);
     }
+
+
+    // 댓글 수정
+    public void updateComment(Long commentId, CommentReqDto.CommentUpdate request) {
+        // TODO 댓글 수정 로직 구현
+    }
+
+
 }

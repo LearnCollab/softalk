@@ -8,26 +8,37 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
 public class CommentReqDto {
 
-    private Long communityId;
-    private Long postId;
+    // 댓글 등록
+    @Getter
+    @NoArgsConstructor
+    public static class CommentCreate {
+        private Long communityId;
+        private Long postId;
 
-    private Long parentCommentId;
+        private Long parentCommentId;
 
-    @NotBlank(message = "댓글 내용은 필수 입력값입니다.")
-    private String content;
+        @NotBlank(message = "댓글 내용은 필수 입력값입니다.")
+        private String content;
 
-    public Comment toEntity(Member writer, Community community, Post post, Comment parentComment){
-        return Comment.builder()
-                .writer(writer)
-                .community(community)
-                .post(post)
-                .parentComment(parentComment)
-                .content(content)
-                .build();
+        public Comment toEntity(Member writer, Community community, Post post, Comment parentComment){
+            return Comment.builder()
+                    .writer(writer)
+                    .community(community)
+                    .post(post)
+                    .parentComment(parentComment)
+                    .content(content)
+                    .build();
+        }
+    }
+
+    // 댓글 수정
+    @Getter
+    @NoArgsConstructor
+    public static class CommentUpdate {
+        @NotBlank(message = "댓글 내용은 필수 입력값입니다.")
+        private String content;
     }
 
 }
