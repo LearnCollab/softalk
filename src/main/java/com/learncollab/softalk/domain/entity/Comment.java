@@ -15,7 +15,11 @@ public class Comment extends BaseTime{
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "community_id")
+    private Community community;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,6 +30,7 @@ public class Comment extends BaseTime{
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
+    @Column(nullable = false)
     private String content;
 
 }
