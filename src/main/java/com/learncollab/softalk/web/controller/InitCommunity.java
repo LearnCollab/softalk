@@ -4,6 +4,7 @@ import com.learncollab.softalk.domain.dto.member.JoinDto;
 import com.learncollab.softalk.domain.entity.Community;
 import com.learncollab.softalk.domain.entity.CommunityMember;
 import com.learncollab.softalk.domain.entity.Member;
+import com.learncollab.softalk.domain.entity.Post;
 import com.learncollab.softalk.web.service.MemberService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -38,8 +39,9 @@ public class InitCommunity {
         @Transactional
         public void init(){
 
-            JoinDto joinDto = new JoinDto("manager@naver.com", "123456", "매니저");
-            memberService.save(joinDto);
+            // 커뮤니티 샘플 데이터 생성
+            JoinDto joinManagerDto = new JoinDto("manager@naver.com", "123456", "매니저");
+            memberService.save(joinManagerDto);
             Member manager = memberService.findMemberByEmail("manager@naver.com").get();
 
             Community community = Community.builder()
@@ -55,6 +57,22 @@ public class InitCommunity {
                     .community(community)
                     .build();
             em.persist(communityMember);
+
+            // 게시글 샘플 데이터 생성
+            JoinDto joinMemberDto1 = new JoinDto("member1@naver.com", "123456", "멤버1");
+            JoinDto joinMemberDto2 = new JoinDto("member2@naver.com", "123456", "멤버2");
+            memberService.save(joinMemberDto1);
+            memberService.save(joinMemberDto2);
+            Member m1 = memberService.findMemberByEmail("member1@naver.com").get();
+            Member m2 = memberService.findMemberByEmail("member2@naver.com").get();
+            for(int i=0; i<10; i++){
+                em.persist(Post.builder()
+                                .community(community)
+                                .title("게시글 "+(i+1))
+                                .content("테스트 내용")
+                                .writer(i % 2 == 0 ? m1 : m2)
+                                .build());
+            }
 
         }
     }

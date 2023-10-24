@@ -10,11 +10,11 @@ import java.util.List;
 
 import static com.learncollab.softalk.domain.entity.QPost.post;
 
-public class PostRepositoryCustomIml implements PostRepositoryCustom {
+public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public PostRepositoryCustomIml(EntityManager em) {
+    public PostRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
