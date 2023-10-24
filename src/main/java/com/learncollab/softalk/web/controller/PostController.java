@@ -5,8 +5,10 @@ import com.learncollab.softalk.domain.dto.post.PostResDto;
 import com.learncollab.softalk.web.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -18,10 +20,10 @@ public class PostController {
     @GetMapping("/{communityId}")
     public ResponseEntity<PostResDto.PostList> getPostList(
             @PathVariable("communityId") Long communityId,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "sortBy", defaultValue = "0") int sortBy //최신순
+            @RequestParam(value = "sortBy", defaultValue = "0") int sortBy, //최신순
+            Pageable pageable
     ){
-        return ResponseEntity.ok().body(postService.getPostList(communityId, page, sortBy));
+        return ResponseEntity.ok().body(postService.getPostList(communityId, sortBy, pageable));
     }
 
     @PostMapping("/{communityId}")

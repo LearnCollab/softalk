@@ -10,9 +10,15 @@ import com.learncollab.softalk.exception.post.PostException;
 import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.learncollab.softalk.exception.ExceptionType.*;
 
@@ -28,9 +34,29 @@ public class PostService {
     private final CommunityRepository communityRepository;
 
     // 게시글 목록 조회
-    public PostResDto.PostList getPostList(Long communityId, int page, int sortBy) {
-        // TODO 게시글 목록 조회 서비스 로직 구현
-        return null;
+    public PostResDto.PostList getPostList(Long communityId, int sortBy, Pageable pageable) {
+        //커뮤니티 존재 확인
+        communityRepository.findById(communityId)
+                .orElseThrow(() -> new CommunityException(NO_SUCH_Community, NO_SUCH_Community.getCode(), NO_SUCH_Community.getErrorMessage()));
+
+        //게시글 목록 조회
+        Page<Post> postPage = postRepository.getPostList(pageable, communityId, sortBy);
+
+        List<PostResDto.PostListDetail> data = postPage.getContent().stream()
+                .map(post -> new PostResDto.PostListDetail(post))
+                .collect(Collectors.toList());
+        int pageNum = postPage.getNumber();
+        long totalCount = postPage.getTotalElements();
+        boolean hasNext = postPage.hasNext();
+        boolean hasPrevious = postPage.hasPrevious();
+
+        return PostResDto.PostList.builder()
+                .totalCount(totalCount)
+                .pageNum(pageNum)
+                .hasNext(hasNext)
+                .hasPrevious(hasPrevious)
+                .data(data)
+                .build();
     }
 
     // 게시글 등록
