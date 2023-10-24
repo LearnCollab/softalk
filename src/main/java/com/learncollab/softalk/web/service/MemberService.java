@@ -89,11 +89,12 @@ public class MemberService implements UserDetailsService, ApplicationListener<OA
 
     public Member findLoginMember(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null){
+        if(authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")){
             String email = authentication.getName();
             return findMemberByEmail(email).orElseThrow(() -> new MemberException(NO_SUCH_MEMBER, NO_SUCH_MEMBER.getCode(), NO_SUCH_MEMBER.getErrorMessage()));
         }
-        throw new MemberException(UNAUTHORIZED_ACCESS, UNAUTHORIZED_ACCESS.getCode(), UNAUTHORIZED_ACCESS.getErrorMessage());
+        return null;
+        //throw new MemberException(UNAUTHORIZED_ACCESS, UNAUTHORIZED_ACCESS.getCode(), UNAUTHORIZED_ACCESS.getErrorMessage());
     }
 
     /*
