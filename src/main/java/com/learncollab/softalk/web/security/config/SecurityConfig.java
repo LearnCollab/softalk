@@ -8,6 +8,7 @@ import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -41,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                     .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                     .requestMatchers(allowedUrls).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/softalk/community/**").permitAll()
                     .anyRequest().authenticated())
                 .oauth2Login()
                     .loginPage("/login")
