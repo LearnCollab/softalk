@@ -24,7 +24,7 @@ public class CommentResDto {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm");
 
             this.commentId = comment.getId();
-            this.parentCommentId = comment.getParentComment().getId();
+            this.parentCommentId = comment.getParentComment() != null ? comment.getParentComment().getId() : null;
             this.writerName = comment.getWriter().getName();
             this.content = comment.getContent();
             this.createdAt = comment.getCreatedAt().format(formatter);

@@ -56,6 +56,9 @@ public class CommentService {
         if(parentId != null){
             parentComment = commentRepository.findById(parentId)
                     .orElseThrow(() -> new CommentException(NO_SUCH_COMMENT, "부모 댓글이 존재하지 않습니다."));
+            if(parentComment.getParentComment() != null){
+                parentComment = parentComment.getParentComment();
+            }
         }
 
         //댓글 등록
