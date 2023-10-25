@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.learncollab.softalk.exception.ExceptionType.*;
 
 @Service
@@ -78,5 +80,37 @@ public class CommentService {
         comment.updateComment(request.getContent());
     }
 
+
+    // 댓글 삭제
+    @Transactional
+    public void deleteComment(Long commentId) {
+
+        //유저 인증
+        Member writer = memberService.findLoginMember();
+        if(writer == null){
+            throw new MemberException(UNAUTHORIZED_ACCESS, UNAUTHORIZED_ACCESS.getCode(), UNAUTHORIZED_ACCESS.getErrorMessage());
+        }
+
+        //댓글 존재 확인
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(NO_SUCH_COMMENT));
+
+        /*댓글 삭제*/
+        // 대댓글인 경우, 다른 대댓글이 있는지 확인
+        Comment parentComment = comment.getParentComment();
+        if(parentComment != null && parentComment.getContent().equals("삭제된 댓글입니다.")){
+            Long childNum = commentRepository.countByParentCommentId(comment.getParentComment().getId());
+            if (childNum == 1) {
+                commentRepository.delete(comment.getParentComment());
+            }
+        }
+        // 자신의 댓글에 대댓글이 달렸는지 확인
+        else if(commentRepository.countByParentCommentId(commentId) != 0){
+            comment.updateComment("삭제된 댓글입니다.");
+            return;
+        }
+
+        commentRepository.delete(comment);
+    }
 
 }
