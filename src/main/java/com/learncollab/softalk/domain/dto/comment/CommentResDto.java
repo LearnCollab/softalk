@@ -9,6 +9,7 @@ import java.util.List;
 
 public class CommentResDto {
 
+    // 댓글 목록 조회
     @Getter
     public static class CommentList {
         private Long commentId;
@@ -33,6 +34,7 @@ public class CommentResDto {
 
     }
 
+    // 대댓글 목록 조회
     @Getter
     public static class CommentReply {
         private Long commentId;

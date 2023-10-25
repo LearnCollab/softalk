@@ -48,12 +48,12 @@ public class PostController {
 
     @GetMapping("/{communityId}/post/{postId}")
     public ResponseEntity<PostResDto.PostDetail> getPost(@PathVariable("communityId") Long communityId,
-                                                         @PathVariable("postId") Long postId) {
+                                                         @PathVariable("postId") Long postId){
         return ResponseEntity.ok().body(postService.getPost(communityId, postId));
     }
 
 
-    @PutMapping("/{communityId}/{postId}")
+    @PutMapping("/{communityId}/post/{postId}")
     public ResponseEntity<Void> updatePost(@Valid @RequestBody PostReqDto request,
                                            @PathVariable("communityId") Long communityId,
                                            @PathVariable("postId") Long postId){
@@ -61,7 +61,7 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{communityId}/{postId}")
+    @DeleteMapping("/{communityId}/post/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable("communityId") Long communityId,
                                            @PathVariable("postId") Long postId){
         postService.deletePost(communityId, postId);

@@ -9,10 +9,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.learncollab.softalk.domain.entity.QComment.comment;
 import static com.learncollab.softalk.domain.entity.QMember.member;
 import static com.learncollab.softalk.domain.entity.QPost.post;
 

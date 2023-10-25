@@ -38,8 +38,9 @@ public class PostService {
     private final CommentRepository commentRepository;
 
 
-    // 게시글 목록 조회
+    /*게시글 목록 조회*/
     public PostResDto.PostList getPostList(Long communityId, String type, int sortBy, Pageable pageable) {
+
         //로그인 여부 확인
         Long memberId = null;
         Member member = memberService.findLoginMember();
@@ -74,8 +75,9 @@ public class PostService {
                 .build();
     }
 
-    // 게시글 등록
+    /*게시글 등록*/
     public void createPost(Long communityId, PostReqDto request) {
+
         //유저 인증
         Member writer = memberService.findLoginMember();
         if(writer == null){
@@ -92,7 +94,7 @@ public class PostService {
     }
 
 
-    // 게시글 상세 조회
+    /*게시글 상세 조회*/
     public PostResDto.PostDetail getPost(Long communityId, Long postId) {
 
         //커뮤니티&게시글 존재 및 관계 확인
@@ -104,11 +106,10 @@ public class PostService {
             throw new PostException(COMMUNITY_POST_MISMATCH);
         }
 
-        /*게시글 상세 조회*/
-        //게시글
+        //게시글 조회
         Post findPost = postRepository.getPost(postId);
 
-        //댓글 목록
+        //댓글 목록 조회
         List<Comment> parentComments = commentRepository.getParentCommentList(postId);
         List<CommentResDto.CommentList> commentList = new ArrayList<>();
         for (Comment parent : parentComments) {
@@ -124,7 +125,7 @@ public class PostService {
     }
 
 
-    // 게시글 수정
+    /*게시글 수정*/
     @Transactional
     public void updatePost(PostReqDto request, Long communityId, Long postId) {
 
@@ -152,7 +153,7 @@ public class PostService {
 
     }
 
-    // 게시글 삭제
+    /*게시글 삭제*/
     public void deletePost(Long communityId, Long postId) {
 
         //커뮤니티&게시글 존재 및 관계 확인
