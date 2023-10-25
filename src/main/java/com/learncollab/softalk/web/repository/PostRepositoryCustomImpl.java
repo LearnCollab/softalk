@@ -1,6 +1,7 @@
 package com.learncollab.softalk.web.repository;
 
 import com.learncollab.softalk.domain.entity.Post;
+import com.learncollab.softalk.domain.entity.QMember;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.learncollab.softalk.domain.entity.QComment.comment;
+import static com.learncollab.softalk.domain.entity.QMember.member;
 import static com.learncollab.softalk.domain.entity.QPost.post;
 
 public class PostRepositoryCustomImpl implements PostRepositoryCustom {
@@ -29,7 +32,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                                   Long communityId, String type, Long memberId, int sortBy) {
         QueryResults<Post> results = queryFactory
                 .selectFrom(post)
-                .join(post.writer).fetchJoin()
+                .join(post.writer, member).fetchJoin()
                 .where(
                         post.community.id.eq(communityId),
                         filterType(type, memberId)
@@ -65,4 +68,18 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
             // TODO 정렬 조건 추가 예정
         }
     }
+
+
+    /**
+     * 게시글 상세 조회
+     */
+    @Override
+    public Post getPost(Long postId) {
+        return queryFactory
+                .selectFrom(post)
+                .join(post.writer, member).fetchJoin()
+                .where(post.id.eq(postId))
+                .fetchOne();
+    }
+
 }

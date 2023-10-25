@@ -1,13 +1,16 @@
 package com.learncollab.softalk.web.service;
 
+import com.learncollab.softalk.domain.dto.comment.CommentResDto;
 import com.learncollab.softalk.domain.dto.post.PostReqDto;
 import com.learncollab.softalk.domain.dto.post.PostResDto;
+import com.learncollab.softalk.domain.entity.Comment;
 import com.learncollab.softalk.domain.entity.Community;
 import com.learncollab.softalk.domain.entity.Member;
 import com.learncollab.softalk.domain.entity.Post;
 import com.learncollab.softalk.exception.community.CommunityException;
 import com.learncollab.softalk.exception.member.MemberException;
 import com.learncollab.softalk.exception.post.PostException;
+import com.learncollab.softalk.web.repository.CommentRepository;
 import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +35,8 @@ public class PostService {
     private final MemberService memberService;
     private final PostRepository postRepository;
     private final CommunityRepository communityRepository;
+    private final CommentRepository commentRepository;
+
 
     // 게시글 목록 조회
     public PostResDto.PostList getPostList(Long communityId, String type, int sortBy, Pageable pageable) {
@@ -52,7 +58,7 @@ public class PostService {
         Page<Post> postPage = postRepository.getPostList(pageable, communityId, type, memberId, sortBy);
 
         List<PostResDto.PostListDetail> data = postPage.getContent().stream()
-                .map(post -> new PostResDto.PostListDetail(post))
+                .map(PostResDto.PostListDetail::new)
                 .collect(Collectors.toList());
         int pageNum = postPage.getNumber();
         long totalCount = postPage.getTotalElements();
@@ -84,6 +90,39 @@ public class PostService {
         Post post = request.toEntity(writer, community);
         postRepository.save(post);
     }
+
+
+    // 게시글 상세 조회
+    public PostResDto.PostDetail getPost(Long communityId, Long postId) {
+
+        //커뮤니티&게시글 존재 및 관계 확인
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new CommunityException(NO_SUCH_Community, NO_SUCH_Community.getCode(), NO_SUCH_Community.getErrorMessage()));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(NO_SUCH_POST));
+        if(community.getId() != post.getCommunity().getId()){
+            throw new PostException(COMMUNITY_POST_MISMATCH);
+        }
+
+        /*게시글 상세 조회*/
+        //게시글
+        Post findPost = postRepository.getPost(postId);
+
+        //댓글 목록
+        List<Comment> parentComments = commentRepository.getParentCommentList(postId);
+        List<CommentResDto.CommentList> commentList = new ArrayList<>();
+        for (Comment parent : parentComments) {
+            List<Comment> childrenComments = commentRepository.getChildrenCommentList(postId, parent.getId());
+            List<CommentResDto.CommentReply> childrenList = childrenComments.stream()
+                    .map(CommentResDto.CommentReply::new)
+                    .collect(Collectors.toList());
+
+            commentList.add(new CommentResDto.CommentList(parent, childrenList));
+        }
+
+        return new PostResDto.PostDetail(findPost, commentList);
+    }
+
 
     // 게시글 수정
     @Transactional

@@ -10,4 +10,6 @@ public interface PostRepositoryCustom {
     Page<Post> getPostList(Pageable pageable,
                            Long communityId, String type, Long memberId, int sortBy);
 
+    Post getPost(Long postId);
+
 }

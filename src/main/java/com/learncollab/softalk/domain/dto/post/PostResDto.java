@@ -1,15 +1,16 @@
 package com.learncollab.softalk.domain.dto.post;
 
+import com.learncollab.softalk.domain.dto.comment.CommentResDto;
 import com.learncollab.softalk.domain.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.domain.Slice;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PostResDto {
 
+    // 게시글 목록조회
     @Getter
     @Builder
     public static class PostList {
@@ -39,4 +40,30 @@ public class PostResDto {
             this.content = post.getContent();
         }
     }
+
+    // 게시글 상세조회
+    @Getter
+    public static class PostDetail {
+
+        private String postCreatedAt;
+        private String postUpdatedAt;
+        private String writerName;
+        private String title;
+        private String content;
+        private List<CommentResDto.CommentList> commentList;
+
+        public PostDetail(Post post, List<CommentResDto.CommentList> commentList){
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm");
+
+            this.postCreatedAt = post.getCreatedAt().format(formatter);
+            this.postUpdatedAt = post.getUpdatedAt().format(formatter);
+            this.writerName = post.getWriter().getName();
+            this.title = post.getTitle();
+            this.content = post.getContent();
+            this.commentList = commentList;
+        }
+
+    }
+
 }

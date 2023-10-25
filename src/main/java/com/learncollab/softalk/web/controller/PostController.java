@@ -46,6 +46,13 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{communityId}/post/{postId}")
+    public ResponseEntity<PostResDto.PostDetail> getPost(@PathVariable("communityId") Long communityId,
+                                                         @PathVariable("postId") Long postId) {
+        return ResponseEntity.ok().body(postService.getPost(communityId, postId));
+    }
+
+
     @PutMapping("/{communityId}/{postId}")
     public ResponseEntity<Void> updatePost(@Valid @RequestBody PostReqDto request,
                                            @PathVariable("communityId") Long communityId,
