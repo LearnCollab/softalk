@@ -1,11 +1,20 @@
 package com.learncollab.softalk.domain.entity;
 
+import com.learncollab.softalk.domain.dto.community.CommunityDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Community extends BaseTime {
     @Id
     @GeneratedValue
@@ -19,6 +28,14 @@ public class Community extends BaseTime {
 
     private Integer members_limit;
 
+    private Integer members_number;
+
+    //0은 모집중/1은 모집완료
+    private Integer state;
+
+    //0은 친목/1은 스터디/2는 .. 일단 3까지 있다고 생각
+    private Integer category;
+
     //설명글
     //private Post Introduction;
 
@@ -28,5 +45,22 @@ public class Community extends BaseTime {
 
     @OneToMany(mappedBy = "community")
     private List<CommunityMember> cm_members = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "community",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private List<CmImage> image = new ArrayList<>();
+
+    public Community(CommunityDto communityDto) {
+        this.cm_name = communityDto.getCm_name();
+        this.cm_type = communityDto.getCm_type();
+        this.manager = communityDto.getManager();
+        this.members_limit = communityDto.getMembers_limit();
+        this.members_number = communityDto.getMembers_number();
+        this.category = communityDto.getCategory();
+        this.state = communityDto.getState();
+    }
 
 }

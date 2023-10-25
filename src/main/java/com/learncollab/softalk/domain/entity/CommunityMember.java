@@ -1,8 +1,16 @@
 package com.learncollab.softalk.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@Getter
+@Builder
+@AllArgsConstructor
 public class CommunityMember {
     @Id
     @GeneratedValue
