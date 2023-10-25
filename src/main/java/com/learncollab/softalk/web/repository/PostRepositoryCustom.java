@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostRepositoryCustom {
 
-    Page<Post> getPostList(Pageable pageable,
+    Page<Post> findPostList(Pageable pageable,
                            Long communityId, String type, Long memberId, int sortBy);
 
-    Post getPost(Long postId);
+    Post findPost(Long postId);
 
 }

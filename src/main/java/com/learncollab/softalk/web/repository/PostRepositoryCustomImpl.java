@@ -26,7 +26,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
      * 게시글 목록 조회
      */
     @Override
-    public Page<Post> getPostList(Pageable pageable,
+    public Page<Post> findPostList(Pageable pageable,
                                   Long communityId, String type, Long memberId, int sortBy) {
         QueryResults<Post> results = queryFactory
                 .selectFrom(post)
@@ -72,7 +72,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
      * 게시글 상세 조회
      */
     @Override
-    public Post getPost(Long postId) {
+    public Post findPost(Long postId) {
         return queryFactory
                 .selectFrom(post)
                 .join(post.writer, member).fetchJoin()

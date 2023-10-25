@@ -35,7 +35,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
      * 게시글 상세 조회 시, 댓글 목록 조회
      */
     @Override
-    public List<Comment> getParentCommentList(Long postId) {
+    public List<Comment> findParentCommentList(Long postId) {
         return queryFactory
                 .selectFrom(comment)
                 .join(comment.writer, member).fetchJoin()
@@ -49,7 +49,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
     }
 
     @Override
-    public List<Comment> getChildrenCommentList(Long postId, Long parentCommentId) {
+    public List<Comment> findChildrenCommentList(Long postId, Long parentCommentId) {
         return queryFactory
                 .selectFrom(comment)
                 .join(comment.writer, member).fetchJoin()

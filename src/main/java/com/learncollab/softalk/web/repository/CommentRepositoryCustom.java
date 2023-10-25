@@ -8,8 +8,8 @@ public interface CommentRepositoryCustom {
 
     Long countByParentCommentId(Long commentId);
 
-    List<Comment> getParentCommentList(Long postId);
+    List<Comment> findParentCommentList(Long postId);
 
-    List<Comment> getChildrenCommentList(Long postId, Long parentCommentId);
+    List<Comment> findChildrenCommentList(Long postId, Long parentCommentId);
 
 }

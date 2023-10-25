@@ -56,7 +56,7 @@ public class PostService {
                 .orElseThrow(() -> new CommunityException(NO_SUCH_Community, NO_SUCH_Community.getCode(), NO_SUCH_Community.getErrorMessage()));
 
         //게시글 목록 조회
-        Page<Post> postPage = postRepository.getPostList(pageable, communityId, type, memberId, sortBy);
+        Page<Post> postPage = postRepository.findPostList(pageable, communityId, type, memberId, sortBy);
 
         List<PostResDto.PostListDetail> data = postPage.getContent().stream()
                 .map(PostResDto.PostListDetail::new)
@@ -107,13 +107,13 @@ public class PostService {
         }
 
         //게시글 조회
-        Post findPost = postRepository.getPost(postId);
+        Post findPost = postRepository.findPost(postId);
 
         //댓글 목록 조회
-        List<Comment> parentComments = commentRepository.getParentCommentList(postId);
+        List<Comment> parentComments = commentRepository.findParentCommentList(postId);
         List<CommentResDto.CommentList> commentList = new ArrayList<>();
         for (Comment parent : parentComments) {
-            List<Comment> childrenComments = commentRepository.getChildrenCommentList(postId, parent.getId());
+            List<Comment> childrenComments = commentRepository.findChildrenCommentList(postId, parent.getId());
             List<CommentResDto.CommentReply> childrenList = childrenComments.stream()
                     .map(CommentResDto.CommentReply::new)
                     .collect(Collectors.toList());
