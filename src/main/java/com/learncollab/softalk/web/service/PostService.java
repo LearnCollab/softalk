@@ -154,6 +154,7 @@ public class PostService {
     }
 
     /*게시글 삭제*/
+    @Transactional
     public void deletePost(Long communityId, Long postId) {
 
         //커뮤니티&게시글 존재 및 관계 확인
@@ -175,7 +176,9 @@ public class PostService {
             throw new PostException(NO_PERMISSION, "해당 게시글에 대한 삭제 권한이 없습니다.");
         }
 
-        //TODO 댓글 삭제
+        //댓글 삭제
+        commentRepository.deleteChildrenByPostId(postId);
+        commentRepository.deleteByPostId(postId);
 
         //게시글 삭제
         postRepository.delete(post);
