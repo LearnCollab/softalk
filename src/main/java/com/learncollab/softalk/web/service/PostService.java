@@ -9,6 +9,7 @@ import com.learncollab.softalk.exception.member.MemberException;
 import com.learncollab.softalk.exception.post.PostException;
 import com.learncollab.softalk.web.repository.CommentRepository;
 import com.learncollab.softalk.web.repository.CommunityRepository;
+import com.learncollab.softalk.web.repository.PostImageRepository;
 import com.learncollab.softalk.web.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,7 @@ public class PostService {
     private final CommunityRepository communityRepository;
     private final CommentRepository commentRepository;
     private final PostImageService postImageService;
+    private final PostImageRepository postImageRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -118,6 +120,12 @@ public class PostService {
         //게시글 조회
         Post findPost = postRepository.findPost(postId);
 
+        //이미지 조회
+        List<String> imageUrlList = new ArrayList<>();
+        imageUrlList = findPost.getImage().stream()
+                .map(PostImage::getImageUrl)
+                .collect(Collectors.toList());
+
         //댓글 목록 조회
         List<Comment> parentComments = commentRepository.findParentCommentList(postId);
         List<CommentResDto.CommentList> commentList = new ArrayList<>();
@@ -130,7 +138,7 @@ public class PostService {
             commentList.add(new CommentResDto.CommentList(parent, childrenList));
         }
 
-        return new PostResDto.PostDetail(findPost, commentList);
+        return new PostResDto.PostDetail(findPost, imageUrlList, commentList);
     }
 
 

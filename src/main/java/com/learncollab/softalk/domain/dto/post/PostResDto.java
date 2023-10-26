@@ -50,9 +50,10 @@ public class PostResDto {
         private String writerName;
         private String title;
         private String content;
+        private List<String> imageUrlList;
         private List<CommentResDto.CommentList> commentList;
 
-        public PostDetail(Post post, List<CommentResDto.CommentList> commentList){
+        public PostDetail(Post post, List<String> imageUrlList, List<CommentResDto.CommentList> commentList){
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm");
 
@@ -61,6 +62,7 @@ public class PostResDto {
             this.writerName = post.getWriter().getName();
             this.title = post.getTitle();
             this.content = post.getContent();
+            this.imageUrlList = imageUrlList;
             this.commentList = commentList;
         }
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.learncollab.softalk.domain.entity.QMember.member;
 import static com.learncollab.softalk.domain.entity.QPost.post;
+import static com.learncollab.softalk.domain.entity.QPostImage.postImage;
 
 public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
@@ -76,6 +77,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return queryFactory
                 .selectFrom(post)
                 .join(post.writer, member).fetchJoin()
+                .leftJoin(post.image, postImage).fetchJoin()
                 .where(post.id.eq(postId))
                 .fetchOne();
     }
