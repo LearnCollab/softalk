@@ -1,6 +1,5 @@
 package com.learncollab.softalk.domain.dto.community;
 
-import com.learncollab.softalk.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

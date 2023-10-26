@@ -7,7 +7,9 @@ import com.learncollab.softalk.web.service.CommunityService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
@@ -38,13 +40,19 @@ public class CommunityController {
     /*커뮤니티 생성 API*/
     @PostMapping
     public void createCommunity(
-            @RequestBody CommunityDto communityDto,
+            @RequestPart(value="image", required = false) List<MultipartFile> multipartFiles,
+            @RequestPart CommunityDto communityDto,
             Authentication authentication,
             HttpServletRequest request) throws IOException {
 
         checkCommunityException(communityDto);
 
-        communityService.create(authentication, communityDto);
+        //이미지 null
+        if(CollectionUtils.isEmpty(multipartFiles) || multipartFiles == null) {
+            communityService.createWithoutImage(authentication, communityDto);
+        }else{
+            communityService.createWithImage(authentication, communityDto, multipartFiles);
+        }
     }
 
     public void checkCommunityException(CommunityDto communityDto) {
@@ -87,7 +95,7 @@ public class CommunityController {
 
         checkParams(state, category);
 
-        return communityService.searchPosts(state, category, keyword);
+        return communityService.searchCommunity(state, category, keyword);
     }
 
     public void checkParams(Integer state, Integer category) {

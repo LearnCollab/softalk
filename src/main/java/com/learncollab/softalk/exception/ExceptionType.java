@@ -3,8 +3,8 @@ package com.learncollab.softalk.exception;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-
 import static org.springframework.http.HttpStatus.*;
+
 
 @Getter
 @RequiredArgsConstructor
@@ -42,6 +42,7 @@ public enum ExceptionType {
     NO_SUCH_Community(BAD_REQUEST, 20006, "존재하지 않는 커뮤니티입니다."),
     PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다."),
 
+
     /*커뮤니티 내 게시글 예외*/
     NO_SUCH_POST(NOT_FOUND, 30001, "존재하지 않는 게시글입니다."),
     NO_PERMISSION(FORBIDDEN, 30002, "해당 게시글에 대한 권한이 없습니다."),
@@ -49,7 +50,13 @@ public enum ExceptionType {
     INVALID_VALUE(BAD_REQUEST, 30004, "잘못된 입력값입니다."),
 
     /*댓글 예외*/
-    NO_SUCH_COMMENT(NOT_FOUND, 40001, "존재하지 않는 댓글입니다.");
+    NO_SUCH_COMMENT(NOT_FOUND, 40001, "존재하지 않는 댓글입니다."),
+
+    /*파일 관련 예외*/
+    FILE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, 50001, "파일 업로드 중 오류가 발생하였습니다."),
+    FILE_DELETE_FAILED(INTERNAL_SERVER_ERROR, 50002, "이미지 삭제 중 오류가 발생하였습니다."),
+    S3_ERROR(INTERNAL_SERVER_ERROR, 50003, "S3 서비스와 통신 중 오류가 발생했습니다.");
+
 
     private final HttpStatus httpStatus;
     private final int code;
