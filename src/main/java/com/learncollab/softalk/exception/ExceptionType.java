@@ -3,8 +3,8 @@ package com.learncollab.softalk.exception;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
+
 
 @Getter
 @RequiredArgsConstructor
@@ -24,14 +24,14 @@ public enum ExceptionType {
     NAME_EMPTY(BAD_REQUEST, 10016, "닉네임은 필수 입력값입니다."),
     NAME_ALREADY_EXIST(BAD_REQUEST, 10017, "이미 존재하는 닉네임입니다."),
   
-    VERIFICATION_CODE_GENERATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 10018, "이메일 인증번호 생성 오류가 발생했습니다."),
-    EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 10019, "이메일 인증번호 발송 오류가 발생했습니다."),
-    VERIFICATION_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, 10020, "이메일 인증번호 검증 오류가 발생했습니다."),
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, 10021, "사용자를 찾을 수 없습니다."),
-    MEMBER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, 10022, "사용자에게 접근 권한이 없습니다."),
+    VERIFICATION_CODE_GENERATION_ERROR(INTERNAL_SERVER_ERROR, 10018, "이메일 인증번호 생성 오류가 발생했습니다."),
+    EMAIL_SEND_ERROR(INTERNAL_SERVER_ERROR, 10019, "이메일 인증번호 발송 오류가 발생했습니다."),
+    VERIFICATION_CODE_NOT_FOUND(NOT_FOUND, 10020, "이메일 인증번호 검증 오류가 발생했습니다."),
+    MEMBER_NOT_FOUND(NOT_FOUND, 10021, "사용자를 찾을 수 없습니다."),
+    MEMBER_NOT_AUTHENTICATED(UNAUTHORIZED, 10022, "사용자에게 접근 권한이 없습니다."),
+    UNAUTHORIZED_ACCESS(UNAUTHORIZED, 10023, "인증되지 않은 사용자입니다."),
+    VERIFICATION_CODE_MISMATCH(BAD_REQUEST, 2004, "인증번호가 일치하지 않습니다."),
 
-    //커뮤니티
-    COMMUNITY_NOT_FOUND(HttpStatus.NOT_FOUND, 20011, "존재하지 않는 커뮤니티입니다."),
 
     /*커뮤니티 관련 예외*/
     CATEGORY_RANGE_ERR(BAD_REQUEST, 20001, "카테고리 범위에 해당되지 않는 요청값입니다."),
@@ -42,10 +42,20 @@ public enum ExceptionType {
     NO_SUCH_Community(BAD_REQUEST, 20006, "존재하지 않는 커뮤니티입니다."),
     PERMISSION_DENIED(BAD_REQUEST, 20007, "해당 커뮤니티에 대한 권한이 없습니다."),
 
+
+    /*커뮤니티 내 게시글 예외*/
+    NO_SUCH_POST(NOT_FOUND, 30001, "존재하지 않는 게시글입니다."),
+    NO_PERMISSION(FORBIDDEN, 30002, "해당 게시글에 대한 권한이 없습니다."),
+    COMMUNITY_POST_MISMATCH(BAD_REQUEST, 30003, "커뮤니티와 게시글이 일치하지 않습니다."),
+    INVALID_VALUE(BAD_REQUEST, 30004, "잘못된 입력값입니다."),
+
+    /*댓글 예외*/
+    NO_SUCH_COMMENT(NOT_FOUND, 40001, "존재하지 않는 댓글입니다."),
+
     /*파일 관련 예외*/
-    FILE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, 30001, "파일 업로드 중 오류가 발생하였습니다."),
-    FILE_DELETE_FAILED(INTERNAL_SERVER_ERROR, 30002, "이미지 삭제 중 오류가 발생하였습니다."),
-    S3_ERROR(INTERNAL_SERVER_ERROR, 30003, "S3 서비스와 통신 중 오류가 발생했습니다.");
+    FILE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, 50001, "파일 업로드 중 오류가 발생하였습니다."),
+    FILE_DELETE_FAILED(INTERNAL_SERVER_ERROR, 50002, "이미지 삭제 중 오류가 발생하였습니다."),
+    S3_ERROR(INTERNAL_SERVER_ERROR, 50003, "S3 서비스와 통신 중 오류가 발생했습니다.");
 
 
     private final HttpStatus httpStatus;

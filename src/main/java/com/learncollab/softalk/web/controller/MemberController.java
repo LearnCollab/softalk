@@ -11,6 +11,7 @@ import com.learncollab.softalk.web.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -130,9 +131,17 @@ public class MemberController {
     /*이메일 인증번호 전송 API*/
     @PostMapping("/email/code-request")
     public ResponseEntity<String> requestVerificationCode(
-            @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
+            @Valid @RequestBody EmailVerificationReqDto.sendCodeRequest request) {
         memberService.sendCodeToEmail(request);
         return ResponseEntity.ok("인증번호 발송 성공");
+    }
+
+    /*이메일 인증번호 검증 API*/
+    @PostMapping("/email/code-verification")
+    public ResponseEntity<String> verifyVerificationCode(
+            @Valid @RequestBody EmailVerificationReqDto.verifyCodeRequest request) {
+        memberService.verifyCode(request);
+        return ResponseEntity.ok("인증번호 확인 성공");
     }
 
 }

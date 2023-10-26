@@ -8,6 +8,7 @@ import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,7 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join", "/oauth2/authorization/kakao",  "/login/oauth2/code/kakao"};
+    private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join", "/oauth2/authorization/kakao",  "/login/oauth2/code/kakao",
+        "/auth/email/code-request", "/auth/email/code-verification"};
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler successHandler;
@@ -40,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                     .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                     .requestMatchers(allowedUrls).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/softalk/community/**").permitAll()
                     .anyRequest().authenticated())
                 .oauth2Login()
                     .loginPage("/login")

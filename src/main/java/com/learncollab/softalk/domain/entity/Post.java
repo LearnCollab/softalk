@@ -1,10 +1,14 @@
 package com.learncollab.softalk.domain.entity;
 
+import com.learncollab.softalk.domain.dto.post.PostReqDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -32,5 +36,27 @@ public class Post extends BaseTime {
 
     @Column(nullable = false)
     private String content;
+
+
+    @OneToMany(
+            mappedBy = "post",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private List<PostImage> image = new ArrayList<>();
+
+
+    // 게시글 제목 및 내용 수정 메소드
+    public void updatePost(PostReqDto request) {
+        String title = request.getTitle();
+        this.title = (title != null && !title.trim().isEmpty()) ? title.trim() : "제목없음";
+        this.content = request.getContent();
+    }
+
+    public void initializeImageList() {
+        if (this.image == null) {
+            this.image = new ArrayList<>();
+        }
+    }
 
 }
