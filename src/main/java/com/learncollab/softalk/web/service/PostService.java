@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -197,6 +196,10 @@ public class PostService {
         //댓글 삭제
         commentRepository.deleteChildrenByPostId(postId);
         commentRepository.deleteByPostId(postId);
+
+        //이미지 삭제
+        List<PostImage> images = post.getImage();
+        postImageService.deletePostImage(bucketName, images, postId);
 
         //게시글 삭제
         postRepository.delete(post);
