@@ -47,10 +47,16 @@ public class Post extends BaseTime {
 
 
     // 게시글 제목 및 내용 수정 메소드
-    public void updatePost(PostReqDto request){
+    public void updatePost(PostReqDto request) {
         String title = request.getTitle();
         this.title = (title != null && !title.trim().isEmpty()) ? title.trim() : "제목없음";
         this.content = request.getContent();
+    }
+
+    public void initializeImageList() {
+        if (this.image == null) {
+            this.image = new ArrayList<>();
+        }
     }
 
 }

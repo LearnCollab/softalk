@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.learncollab.softalk.exception.ExceptionType.INVALID_VALUE;
 
@@ -40,9 +43,11 @@ public class PostController {
     }
 
     @PostMapping("/{communityId}")
-    public ResponseEntity<Void> createPost(@PathVariable("communityId") Long communityId,
-                                           @Valid @RequestBody PostReqDto request){
-        postService.createPost(communityId, request);
+    public ResponseEntity<Void> createPost(
+            @PathVariable("communityId") Long communityId,
+            @Valid @RequestPart(value = "data") PostReqDto request,
+            @RequestPart(value="imageList", required = false) List<MultipartFile> multipartFiles){
+        postService.createPost(communityId, request, multipartFiles);
         return ResponseEntity.ok().build();
     }
 

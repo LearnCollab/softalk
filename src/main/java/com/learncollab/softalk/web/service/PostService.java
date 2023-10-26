@@ -3,10 +3,7 @@ package com.learncollab.softalk.web.service;
 import com.learncollab.softalk.domain.dto.comment.CommentResDto;
 import com.learncollab.softalk.domain.dto.post.PostReqDto;
 import com.learncollab.softalk.domain.dto.post.PostResDto;
-import com.learncollab.softalk.domain.entity.Comment;
-import com.learncollab.softalk.domain.entity.Community;
-import com.learncollab.softalk.domain.entity.Member;
-import com.learncollab.softalk.domain.entity.Post;
+import com.learncollab.softalk.domain.entity.*;
 import com.learncollab.softalk.exception.community.CommunityException;
 import com.learncollab.softalk.exception.member.MemberException;
 import com.learncollab.softalk.exception.post.PostException;
@@ -14,10 +11,13 @@ import com.learncollab.softalk.web.repository.CommentRepository;
 import com.learncollab.softalk.web.repository.CommunityRepository;
 import com.learncollab.softalk.web.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommunityRepository communityRepository;
     private final CommentRepository commentRepository;
+    private final PostImageService postImageService;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
+    private final String bucketDirName = "post";
 
 
     /*게시글 목록 조회*/
@@ -76,7 +81,7 @@ public class PostService {
     }
 
     /*게시글 등록*/
-    public void createPost(Long communityId, PostReqDto request) {
+    public void createPost(Long communityId, PostReqDto request, List<MultipartFile> multipartFiles) {
 
         //유저 인증
         Member writer = memberService.findLoginMember();
@@ -91,6 +96,19 @@ public class PostService {
         //게시글 등록
         Post post = request.toEntity(writer, community);
         postRepository.save(post);
+
+        //이미지 등록
+        if(!multipartFiles.isEmpty()) {
+            //S3에 저장
+            List<PostImage> imageList = postImageService.uploadPostImage(multipartFiles, bucketName, bucketDirName);
+
+            //DB에 저장
+            if(!imageList.isEmpty()) {
+                for(PostImage image : imageList) {
+                    postImageService.savePostImage(image, post);
+                }
+            }
+        }
     }
 
 
