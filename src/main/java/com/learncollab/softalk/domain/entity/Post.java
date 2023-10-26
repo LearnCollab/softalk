@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "posts")
@@ -33,6 +36,14 @@ public class Post extends BaseTime {
 
     @Column(nullable = false)
     private String content;
+
+
+    @OneToMany(
+            mappedBy = "post",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private List<PostImage> image = new ArrayList<>();
 
 
     // 게시글 제목 및 내용 수정 메소드
