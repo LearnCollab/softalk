@@ -59,10 +59,12 @@ public class PostController {
 
 
     @PutMapping("/{communityId}/post/{postId}")
-    public ResponseEntity<Void> updatePost(@Valid @RequestBody PostReqDto request,
-                                           @PathVariable("communityId") Long communityId,
-                                           @PathVariable("postId") Long postId){
-        postService.updatePost(request, communityId, postId);
+    public ResponseEntity<Void> updatePost(
+            @PathVariable("communityId") Long communityId,
+            @PathVariable("postId") Long postId,
+            @Valid @RequestPart(value = "data") PostReqDto request,
+            @RequestPart(value="imageList", required = false) List<MultipartFile> multipartFiles){
+        postService.updatePost(communityId, postId, request, multipartFiles);
         return ResponseEntity.ok().build();
     }
 

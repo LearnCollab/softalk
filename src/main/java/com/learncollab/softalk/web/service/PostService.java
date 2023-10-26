@@ -98,15 +98,7 @@ public class PostService {
 
         //이미지 등록
         if(!multipartFiles.isEmpty()) {
-            //S3에 저장
-            List<PostImage> imageList = postImageService.uploadPostImage(multipartFiles, bucketName, bucketDirName);
-
-            //DB에 저장
-            if(!imageList.isEmpty()) {
-                for(PostImage image : imageList) {
-                    postImageService.savePostImage(image, post);
-                }
-            }
+            createImage(multipartFiles, post);
         }
     }
 
@@ -144,7 +136,8 @@ public class PostService {
 
     /*게시글 수정*/
     @Transactional
-    public void updatePost(PostReqDto request, Long communityId, Long postId) {
+    public void updatePost(Long communityId, Long postId,
+                           PostReqDto request, List<MultipartFile> multipartFiles) {
 
         //커뮤니티&게시글 존재 및 관계 확인
         Community community = communityRepository.findById(communityId)
@@ -163,6 +156,12 @@ public class PostService {
 
         if(post.getWriter().getId() != member.getId()){
             throw new PostException(NO_PERMISSION, "해당 게시글에 대한 수정 권한이 없습니다.");
+        }
+
+        //이미지 수정 (삭제 후 재등록)
+        if(!multipartFiles.isEmpty()){
+            deleteImage(post);
+            createImage(multipartFiles, post);
         }
 
         //게시글 수정
@@ -198,11 +197,27 @@ public class PostService {
         commentRepository.deleteByPostId(postId);
 
         //이미지 삭제
-        List<PostImage> images = post.getImage();
-        postImageService.deletePostImage(bucketName, images, postId);
+        deleteImage(post);
 
         //게시글 삭제
         postRepository.delete(post);
+    }
+
+    private void createImage(List<MultipartFile> multipartFiles, Post post){
+        //S3에 저장
+        List<PostImage> imageList = postImageService.uploadPostImage(multipartFiles, bucketName, bucketDirName);
+
+        //DB에 저장
+        if(!imageList.isEmpty()) {
+            for(PostImage image : imageList) {
+                postImageService.savePostImage(image, post);
+            }
+        }
+    }
+
+    private void deleteImage(Post post){
+        List<PostImage> images = post.getImage();
+        postImageService.deletePostImage(bucketName, images, post.getId());
     }
 
 }
