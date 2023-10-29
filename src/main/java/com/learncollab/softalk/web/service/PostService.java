@@ -122,7 +122,7 @@ public class PostService {
 
         //이미지 조회
         List<String> imageUrlList = new ArrayList<>();
-        imageUrlList = findPost.getImage().stream()
+        imageUrlList = findPost.getImages().stream()
                 .map(PostImage::getImageUrl)
                 .collect(Collectors.toList());
 
@@ -227,7 +227,7 @@ public class PostService {
     }
 
     private void deleteImage(Post post){
-        List<PostImage> images = post.getImage();
+        List<PostImage> images = post.getImages();
         postImageService.deletePostImage(bucketName, images);
     }
 

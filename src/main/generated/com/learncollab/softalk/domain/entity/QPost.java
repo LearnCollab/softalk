@@ -33,7 +33,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<PostImage, QPostImage> image = this.<PostImage, QPostImage>createList("image", PostImage.class, QPostImage.class, PathInits.DIRECT2);
+    public final ListPath<PostImage, QPostImage> images = this.<PostImage, QPostImage>createList("images", PostImage.class, QPostImage.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
 
