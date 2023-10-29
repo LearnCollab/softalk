@@ -39,11 +39,9 @@ public class PostImageService {
     }
 
     //이미지 삭제
-    public void deletePostImage(String bucketName, List<PostImage> images, Long postId) {
+    public void deletePostImage(String bucketName, List<PostImage> images) {
         images.stream()
                 .forEach(image -> s3UploadService.deleteFile(bucketName, image.getS3key()));
-
-        postImageRepository.deleteByPostId(postId);
     }
 
 }

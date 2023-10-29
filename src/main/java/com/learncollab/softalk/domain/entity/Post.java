@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,15 @@ public class Post extends BaseTime {
     public void initializeImageList() {
         if (this.image == null) {
             this.image = new ArrayList<>();
+        }
+    }
+
+    public void updateImages(List<PostImage> newImages){
+        this.image.clear();
+
+        for (PostImage image : newImages) {
+            image.setPost(this);
+            this.image.add(image);
         }
     }
 
