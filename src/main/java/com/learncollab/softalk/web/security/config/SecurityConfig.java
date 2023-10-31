@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
     private final String[] allowedUrls = {"/auth/join", "/auth/login","/", "/login", "/join", "/oauth2/authorization/kakao",  "/login/oauth2/code/kakao",
-        "/auth/email/code-request", "/auth/email/code-verification"};
+        "/auth/email/code-request", "/auth/email/code-verification","/api/hello"};
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler successHandler;
