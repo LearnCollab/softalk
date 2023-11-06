@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 const PostDetail = () => {
+  const navigate = useNavigate();
+
   const { communityId, postId } = useParams();
   const [postDetail, setPostDetail] = useState(null);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
 
@@ -23,9 +26,44 @@ const PostDetail = () => {
     return <div>Loading...</div>;
   }
 
+  /* 게시글 삭제 */
+  const deletePost = () => {
+      const url = `/softalk/community/${communityId}/post/${postId}`;
+
+      axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if(response.status == 200){
+           alert('게시글 삭제 성공');
+           navigate(`/softalk/community/${communityId}`);
+        }
+      })
+      .catch(error => {
+        if(error.response.status == 403){
+            alert('게시글 삭제 불가: 게시글 삭제 권한 없음');
+        }
+        console.error('게시글 삭제 중 오류 발생: ', error);
+      });
+  };
+
   return (
     <div className="post-detail">
+
       <h1>{postDetail.title}</h1>
+
+      <div>
+        <input
+            type="text"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="토큰을 입력하세요"
+        />
+        <button onClick={deletePost}>삭제</button>
+      </div>
+
       <p>작성자: {postDetail.writerName}</p>
       <p>작성일: {postDetail.postCreatedAt}</p>
       <p>수정일: {postDetail.postUpdatedAt}</p>
