@@ -37,7 +37,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                         filterType(type, memberId)
                 )
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize()+1)
+                .limit(pageable.getPageSize())
                 .orderBy(
                         sortBy(sortBy)
                 )

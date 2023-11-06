@@ -4,6 +4,7 @@ import {Router, Routes, Route, Link} from "react-router-dom";
 
 import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
+import PostWrite from './components/PostWrite';
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
             <Routes>
                 <Route path="/softalk/community/:communityId/post/:postId" element={<PostDetail />} />
                 <Route path="/softalk/community/:communityId" element={<PostList />} />
+                <Route path="/softalk/community/:communityId/write-post" element={<PostWrite />} />
             </Routes>
         </div>
     );

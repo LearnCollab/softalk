@@ -99,7 +99,7 @@ public class PostService {
         postRepository.save(post);
 
         //이미지 등록
-        if(!multipartFiles.isEmpty()) {
+        if(multipartFiles != null && !multipartFiles.isEmpty()) {
             createImage(multipartFiles, post);
         }
     }
