@@ -20,7 +20,8 @@ const PostDetail = () => {
       .catch(error => {
         console.error('커뮤니티 내 게시글 상세 조회 중 오류 발생: ', error);
       });
-  }, [communityId, postId]);
+  }, [communityId, postId, setPostDetail]);
+
 
   if (!postDetail) {
     return <div>Loading...</div>;
@@ -64,6 +65,12 @@ const PostDetail = () => {
         <button onClick={deletePost}>삭제</button>
       </div>
 
+      <Link
+        to={`/softalk/community/${communityId}/post/${postId}/update-post`}
+        state={{ postDetail: postDetail }}>
+        수정
+      </Link>
+
       <p>작성자: {postDetail.writerName}</p>
       <p>작성일: {postDetail.postCreatedAt}</p>
       <p>수정일: {postDetail.postUpdatedAt}</p>
@@ -73,7 +80,11 @@ const PostDetail = () => {
       <ul>
         {postDetail.imageUrlList && postDetail.imageUrlList.map((imageUrl, index) => (
           <li key={index}>
-            <img src={imageUrl} alt={`Image ${index + 1}`} />
+            <img
+                src={imageUrl}
+                alt={`Image ${index + 1}`}
+                style={{ maxWidth: '200px', maxHeight: '200px' }}
+            />
           </li>
         ))}
       </ul>

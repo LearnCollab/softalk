@@ -69,7 +69,7 @@ const PostWrite = () => {
         }
       })
       .catch(error => {
-        console.error('Error creating post:', error);
+        console.error('게시글 작성 중 오류 발생:', error);
       });
   }
 

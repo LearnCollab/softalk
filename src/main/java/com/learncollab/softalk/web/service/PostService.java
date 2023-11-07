@@ -167,7 +167,7 @@ public class PostService {
         }
 
         //이미지 수정 (삭제 후 재등록)
-        if(!multipartFiles.isEmpty()){
+        if(multipartFiles != null && !multipartFiles.isEmpty()) {
             deleteImage(post);
             createImage(multipartFiles, post);
         }
