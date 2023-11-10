@@ -90,6 +90,7 @@ const PostDetail = () => {
       </ul>
 
       <h3>댓글 목록</h3>
+
       <ul>
         {postDetail.commentList && postDetail.commentList.map(comment => (
           <li key={comment.commentId}>
@@ -97,6 +98,19 @@ const PostDetail = () => {
             <p>작성일: {comment.createdAt}</p>
             <p>수정일: {comment.updatedAt}</p>
             <p>내용: {comment.content}</p>
+            <input
+                type="text"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                placeholder="토큰을 입력하세요"
+            />
+
+            <Link
+                to={`/softalk/comment/${comment.commentId}`}
+                state={{ token: token }}>
+                    <button>삭제</button>
+            </Link>
+
             <ul>
             {comment.children && comment.children.map(reply => (
                 <li key={reply.commentId}>
@@ -105,6 +119,13 @@ const PostDetail = () => {
                     <p>작성일: {reply.createdAt}</p>
                     <p>수정일: {reply.updatedAt}</p>
                     <p>내용: {reply.content}</p>
+                    <input
+                        type="text"
+                        value={token}
+                        onChange={(e) => setToken(e.target.value)}
+                        placeholder="토큰을 입력하세요"
+                    />
+                    <button>삭제</button>
                 </li>
             ))}
             </ul>

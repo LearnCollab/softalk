@@ -6,6 +6,7 @@ import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
 import PostWrite from './components/PostWrite';
 import PostUpdate from './components/PostUpdate';
+import CommentEdit from './components/CommentEdit';
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/softalk/community/:communityId" element={<PostList />} />
                 <Route path="/softalk/community/:communityId/write-post" element={<PostWrite />} />
                 <Route path="/softalk/community/:communityId/post/:postId/update-post" element={<PostUpdate />} />
+                <Route path="/softalk/comment/:commentId" element={<CommentEdit />} />
             </Routes>
         </div>
     );
