@@ -11,4 +11,8 @@ public class MemberException extends RuntimeException{
     private ExceptionType exceptionType;
     private int code;
     private String errorMessage;
+    @Override
+    public String getMessage() {
+        return errorMessage;
+    }
 }
