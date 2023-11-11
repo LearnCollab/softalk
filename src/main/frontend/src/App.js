@@ -4,11 +4,11 @@ import Login from './Auth/Login';
 import Join from './Auth/Join';
 import CreateCommunity from './Community/CreateCommunity';
 
-import PostList from './components/PostList';
-import PostDetail from './components/PostDetail';
-import PostWrite from './components/PostWrite';
-import PostUpdate from './components/PostUpdate';
-import CommentEdit from './components/CommentEdit';
+import PostList from './Post/PostList';
+import PostDetail from './Post/PostDetail';
+import PostWrite from './Post/PostWrite';
+import PostUpdate from './Post/PostUpdate';
+import CommentEdit from './Post/CommentEdit';
 
 function App() {
   return (
