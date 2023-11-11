@@ -45,6 +45,10 @@ function Main() {
       <div>
         <a href="/oauth2/authorization/kakao">Kakao Login (로컬에선 동작x)</a>
       </div>
+
+      <div>
+        <a href="/softalk/community/1">샘플 커뮤니티 바로가기</a>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import CommentWrite from './CommentWrite';
 
 const PostDetail = () => {
   const navigate = useNavigate();
@@ -90,6 +91,8 @@ const PostDetail = () => {
       </ul>
 
       <h3>댓글 목록</h3>
+      <h2>댓글 작성</h2>
+      <CommentWrite postId={postId}/>
 
       <ul>
         {postDetail.commentList && postDetail.commentList.map(comment => (
@@ -110,6 +113,10 @@ const PostDetail = () => {
                 state={{ token: token }}>
                     <button>삭제</button>
             </Link>
+
+            {(!comment.children || comment.children.length === 0) && (
+                <CommentWrite postId={postId} parentCommentId={comment.commentId} />
+            )}
 
             <ul>
             {comment.children && comment.children.map(reply => (
