@@ -77,7 +77,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return queryFactory
                 .selectFrom(post)
                 .join(post.writer, member).fetchJoin()
-                .leftJoin(post.image, postImage).fetchJoin()
+                .leftJoin(post.images, postImage).fetchJoin()
                 .where(post.id.eq(postId))
                 .fetchOne();
     }

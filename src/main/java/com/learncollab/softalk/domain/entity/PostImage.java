@@ -34,8 +34,8 @@ public class PostImage {
         // 게시글에 현재 파일이 존재하지 않는다면
         post.initializeImageList();
 
-        if(!post.getImage().contains(this)){
-            post.getImage().add(this);
+        if(!post.getImages().contains(this)){
+            post.getImages().add(this);
         }
     }
 

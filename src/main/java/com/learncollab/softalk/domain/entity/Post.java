@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Post extends BaseTime {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
-    private List<PostImage> image = new ArrayList<>();
+    private List<PostImage> images = new ArrayList<>();
 
 
     // 게시글 제목 및 내용 수정 메소드
@@ -54,8 +55,17 @@ public class Post extends BaseTime {
     }
 
     public void initializeImageList() {
-        if (this.image == null) {
-            this.image = new ArrayList<>();
+        if (this.images == null) {
+            this.images = new ArrayList<>();
+        }
+    }
+
+    public void updateImages(List<PostImage> newImages){
+        this.images.clear();
+
+        for (PostImage image : newImages) {
+            image.setPost(this);
+            this.images.add(image);
         }
     }
 

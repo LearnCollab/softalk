@@ -122,7 +122,7 @@ public class PostService {
 
         //이미지 조회
         List<String> imageUrlList = new ArrayList<>();
-        imageUrlList = findPost.getImage().stream()
+        imageUrlList = findPost.getImages().stream()
                 .map(PostImage::getImageUrl)
                 .collect(Collectors.toList());
 
@@ -169,7 +169,9 @@ public class PostService {
         //이미지 수정 (삭제 후 재등록)
         if(multipartFiles != null && !multipartFiles.isEmpty()) {
             deleteImage(post);
-            createImage(multipartFiles, post);
+
+            List<PostImage> imageList = createImage(multipartFiles, post);
+            post.updateImages(imageList);
         }
 
         //게시글 수정
@@ -211,7 +213,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    private void createImage(List<MultipartFile> multipartFiles, Post post){
+    private List<PostImage> createImage(List<MultipartFile> multipartFiles, Post post){
         //S3에 저장
         List<PostImage> imageList = postImageService.uploadPostImage(multipartFiles, bucketName, bucketDirName);
 
@@ -221,11 +223,12 @@ public class PostService {
                 postImageService.savePostImage(image, post);
             }
         }
+        return imageList;
     }
 
     private void deleteImage(Post post){
-        List<PostImage> images = post.getImage();
-        postImageService.deletePostImage(bucketName, images, post.getId());
+        List<PostImage> images = post.getImages();
+        postImageService.deletePostImage(bucketName, images);
     }
 
 }
