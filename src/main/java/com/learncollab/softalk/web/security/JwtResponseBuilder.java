@@ -19,7 +19,7 @@ public class JwtResponseBuilder {
 
         response.addHeader("Authorization", grantType + " " + accessToken);
 
-        LoginResDto loginResDto = new LoginResDto(refreshToken);
+        LoginResDto loginResDto = new LoginResDto(refreshToken, accessToken);
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(loginResDto);

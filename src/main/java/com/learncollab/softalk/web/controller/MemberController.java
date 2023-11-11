@@ -1,8 +1,6 @@
 package com.learncollab.softalk.web.controller;
 
-import com.learncollab.softalk.domain.dto.member.EmailVerificationReqDto;
-import com.learncollab.softalk.domain.dto.member.JoinDto;
-import com.learncollab.softalk.domain.dto.member.JwtToken;
+import com.learncollab.softalk.domain.dto.member.*;
 import com.learncollab.softalk.exception.member.MemberException;
 import com.learncollab.softalk.exception.validator.MemberValidator;
 import com.learncollab.softalk.web.security.JwtResponseBuilder;
@@ -53,13 +51,25 @@ public class MemberController {
 
     /*일반 로그인 처리 로직*/
     @PostMapping("/login")
-    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+    public LoginResDto login(@RequestBody LoginRequestDto loginRequestDto){
+        String email = loginRequestDto.getEmail();
+        String password = loginRequestDto.getPassword();
 
         JwtToken jwtToken = authenticationService.authenticateAndGenerateToken(email, password);
 
-        jwtResponseBuilder.buildJwtResponse(jwtToken, response);
+        String accessToken = jwtToken.getAccessToken();
+        String refreshToken = jwtToken.getRefreshToken();
+        LoginResDto loginResDto = new LoginResDto(refreshToken, accessToken);
+        return loginResDto;
+        //jwtResponseBuilder.buildJwtResponse(jwtToken, response);
+    }
+
+    //TODO
+    // -SecurityConfig의 .oauth2Login()
+    // .loginPage("/auth/login") 알맞게 수정
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
 
     @GetMapping("/token-check")
