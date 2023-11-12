@@ -25,8 +25,10 @@ const CommentWrite = ({ postId, parentCommentId }) => {
 
     const url = `/softalk/comment`;
 
+    const token = localStorage.getItem('jwt');
+
     const headers = {
-      'Authorization': `Bearer ${formData.token}`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     };
 
@@ -54,28 +56,14 @@ const CommentWrite = ({ postId, parentCommentId }) => {
     <div className="comment-write">
       <form onSubmit={createComment}>
         <div>
-          <label>토큰</label>
-          <input
-            type="text"
-            name="token"
-            value={formData.token}
-            onChange={handleChange}
-            placeholder="토큰을 입력하세요."
-          />
-        </div>
-        <div>
-          <label>댓글</label>
+          <label>{formData.parentCommentId == null ? '댓글' : '대댓글'}</label>
           <textarea
             name="content"
             value={formData.content}
             onChange={handleChange}
             placeholder="댓글 내용을 입력하세요."
           />
-        </div>
-        <div>
-            <button type="submit">
-                {formData.parentCommentId === null ? '작성' : '대댓글 작성'}
-            </button>
+          <button type="submit">작성</button>
         </div>
       </form>
     </div>

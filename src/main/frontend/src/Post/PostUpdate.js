@@ -12,7 +12,6 @@ const PostUpdate = () => {
     : { title: '', content: '' };
 
   const [formData, setFormData] = useState({
-    token: '',
     title: postDetail ? postDetail.title : '',
     content: postDetail ? postDetail.content : '',
     images: []
@@ -41,8 +40,10 @@ const PostUpdate = () => {
   const updatePost = (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('jwt');
+
     const headers = {
-      'Authorization': `Bearer ${formData.token}`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'multipart/form-data'
     };
 
@@ -83,15 +84,6 @@ const PostUpdate = () => {
     <div className="post-update">
       <h1>게시글 수정</h1>
       <form onSubmit={updatePost}>
-        <div>
-            <label>토큰</label>
-            <input
-                type="text"
-                name="token"
-                value={formData.token}
-                onChange={handleChange}
-            />
-        </div>
         <div>
             <label>제목</label>
             <input

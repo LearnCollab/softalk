@@ -8,7 +8,6 @@ import PostList from './Post/PostList';
 import PostDetail from './Post/PostDetail';
 import PostWrite from './Post/PostWrite';
 import PostUpdate from './Post/PostUpdate';
-import CommentEdit from './Post/CommentEdit';
 
 function App() {
   return (
@@ -23,7 +22,6 @@ function App() {
         <Route path="/softalk/community/:communityId" element={<PostList />} />
         <Route path="/softalk/community/:communityId/write-post" element={<PostWrite />} />
         <Route path="/softalk/community/:communityId/post/:postId/update-post" element={<PostUpdate />} />
-        <Route path="/softalk/comment/:commentId" element={<CommentEdit />} />
       </Routes>
     </Router>
   );

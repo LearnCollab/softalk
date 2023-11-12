@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import CommentWrite from './CommentWrite';
 
 const PostDetail = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { communityId, postId } = useParams();
   const [postDetail, setPostDetail] = useState(null);
-  const [token, setToken] = useState('');
+
+  const token = localStorage.getItem('jwt');
 
   useEffect(() => {
 
@@ -51,33 +53,47 @@ const PostDetail = () => {
       });
   };
 
+  /* 댓글 삭제 */
+  const deleteComment = (commentId) => {
+    const url = `/softalk/comment/${commentId}`;
+
+    axios.delete(url, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          .then(response => {
+            if(response.status == 200){
+               alert('댓글 삭제 성공');
+               window.location.reload();
+            }
+          })
+          .catch(error => {
+            if(error.response.status == 403){
+                alert('댓글 삭제 불가: 댓글 삭제 권한 없음');
+            }
+            console.error('댓글 삭제 중 오류 발생: ', error);
+          });
+  };
+
   return (
     <div className="post-detail">
 
       <h1>{postDetail.title}</h1>
 
-      <div>
-        <input
-            type="text"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            placeholder="토큰을 입력하세요"
-        />
-        <button onClick={deletePost}>삭제</button>
-      </div>
-
       <Link
         to={`/softalk/community/${communityId}/post/${postId}/update-post`}
         state={{ postDetail: postDetail }}>
-        수정
+        <button>수정</button>
       </Link>
+      <button onClick={deletePost}>삭제</button>
 
       <p>작성자: {postDetail.writerName}</p>
       <p>작성일: {postDetail.postCreatedAt}</p>
       <p>수정일: {postDetail.postUpdatedAt}</p>
       <p>내용: {postDetail.content}</p>
 
-      <h3>이미지 목록</h3>
+      <h3>※ 이미지 목록 ※</h3>
       <ul>
         {postDetail.imageUrlList && postDetail.imageUrlList.map((imageUrl, index) => (
           <li key={index}>
@@ -90,8 +106,8 @@ const PostDetail = () => {
         ))}
       </ul>
 
-      <h3>댓글 목록</h3>
-      <h2>댓글 작성</h2>
+      <h3>※ 댓글 목록 ※</h3>
+      <div><b>댓글 작성</b></div>
       <CommentWrite postId={postId}/>
 
       <ul>
@@ -101,21 +117,14 @@ const PostDetail = () => {
             <p>작성일: {comment.createdAt}</p>
             <p>수정일: {comment.updatedAt}</p>
             <p>내용: {comment.content}</p>
-            <input
-                type="text"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-                placeholder="토큰을 입력하세요"
-            />
 
-            <Link
-                to={`/softalk/comment/${comment.commentId}`}
-                state={{ token: token }}>
-                    <button>삭제</button>
-            </Link>
-
-            {(!comment.children || comment.children.length === 0) && (
+            {comment.content !== "삭제된 댓글입니다." && (
+            <div>
+                <button onClick={() => deleteComment(comment.commentId)}>
+                    삭제
+                </button>
                 <CommentWrite postId={postId} parentCommentId={comment.commentId} />
+            </div>
             )}
 
             <ul>
@@ -126,13 +135,9 @@ const PostDetail = () => {
                     <p>작성일: {reply.createdAt}</p>
                     <p>수정일: {reply.updatedAt}</p>
                     <p>내용: {reply.content}</p>
-                    <input
-                        type="text"
-                        value={token}
-                        onChange={(e) => setToken(e.target.value)}
-                        placeholder="토큰을 입력하세요"
-                    />
-                    <button>삭제</button>
+                    <button onClick={() => deleteComment(reply.commentId)}>
+                        삭제
+                    </button>
                 </li>
             ))}
             </ul>

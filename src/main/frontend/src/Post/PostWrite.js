@@ -7,7 +7,6 @@ const PostWrite = () => {
 
   const { communityId } = useParams();
   const [formData, setFormData] = useState({
-    token: '',
     title: '',
     content: '',
     images: []
@@ -32,8 +31,10 @@ const PostWrite = () => {
   const createPost = (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('jwt');
+
     const headers = {
-      'Authorization': `Bearer ${formData.token}`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'multipart/form-data'
     };
 
@@ -77,15 +78,6 @@ const PostWrite = () => {
     <div className="post-create">
       <h1>게시글 작성</h1>
       <form onSubmit={createPost}>
-        <div>
-          <label>토큰</label>
-          <input
-            type="text"
-            name="token"
-            value={formData.token}
-            onChange={handleChange}
-          />
-        </div>
         <div>
           <label>제목</label>
           <input
