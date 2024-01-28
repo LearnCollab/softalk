@@ -38,6 +38,8 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String thumbnailUrl;
 
     @OneToMany(
             mappedBy = "post",
@@ -67,6 +69,10 @@ public class Post extends BaseTime {
             image.setPost(this);
             this.images.add(image);
         }
+    }
+
+    public void updateThumbnail(String thumbnailUrl){
+        this.thumbnailUrl = thumbnailUrl;
     }
 
 }

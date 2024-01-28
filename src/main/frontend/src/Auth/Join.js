@@ -30,6 +30,7 @@ function Join() {
 
   return (
     <div>
+    <br/><br/><br/><br/>
       <h1>회원가입</h1>
       <input
         type="text"

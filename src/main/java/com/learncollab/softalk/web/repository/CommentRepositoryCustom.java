@@ -11,5 +11,6 @@ public interface CommentRepositoryCustom {
     List<Comment> findParentCommentList(Long postId);
 
     List<Comment> findChildrenCommentList(Long postId, Long parentCommentId);
+    Long countByPostId(Long postId);
 
 }

@@ -58,13 +58,24 @@ public class PostController {
     }
 
 
-    @PutMapping("/{communityId}/post/{postId}")
-    public ResponseEntity<Void> updatePost(
+    // 보류 (이미지 수정 포함)
+    @PutMapping("/{communityId}/post/{postId}/original")
+    public ResponseEntity<Void> updatePostOriginal(
             @PathVariable("communityId") Long communityId,
             @PathVariable("postId") Long postId,
             @Valid @RequestPart(value = "data") PostReqDto request,
             @RequestPart(value="imageList", required = false) List<MultipartFile> multipartFiles){
-        postService.updatePost(communityId, postId, request, multipartFiles);
+        postService.updatePostOriginal(communityId, postId, request, multipartFiles);
+        return ResponseEntity.ok().build();
+    }
+
+    // 임시 (게시글 제목, 내용만 수정)
+    @PutMapping("/{communityId}/post/{postId}")
+    public ResponseEntity<Void> updatePost(
+            @PathVariable("communityId") Long communityId,
+            @PathVariable("postId") Long postId,
+            @Valid @RequestPart(value = "data") PostReqDto request){
+        postService.updatePost(communityId, postId, request);
         return ResponseEntity.ok().build();
     }
 

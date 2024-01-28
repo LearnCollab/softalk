@@ -63,10 +63,13 @@ public class PostService {
 
         //게시글 목록 조회
         Page<Post> postPage = postRepository.findPostList(pageable, communityId, type, memberId, sortBy);
-
         List<PostResDto.PostListDetail> data = postPage.getContent().stream()
-                .map(PostResDto.PostListDetail::new)
+                .map(post -> {
+                        long commentCount = commentRepository.countByPostId(post.getId());
+                        return new PostResDto.PostListDetail(post, commentCount, post.getThumbnailUrl());
+                })
                 .collect(Collectors.toList());
+
         int pageNum = postPage.getNumber();
         long totalCount = postPage.getTotalElements();
         boolean hasNext = postPage.hasNext();
@@ -82,6 +85,7 @@ public class PostService {
     }
 
     /*게시글 등록*/
+    @Transactional
     public void createPost(Long communityId, PostReqDto request, List<MultipartFile> multipartFiles) {
 
         //유저 인증
@@ -99,8 +103,10 @@ public class PostService {
         postRepository.save(post);
 
         //이미지 등록
+        List<PostImage> imageList = new ArrayList<>();
         if(multipartFiles != null && !multipartFiles.isEmpty()) {
-            createImage(multipartFiles, post);
+            imageList = createImage(multipartFiles, post);
+            post.updateThumbnail(imageList.get(0).getImageUrl());
         }
     }
 
@@ -128,6 +134,9 @@ public class PostService {
 
         //댓글 목록 조회
         List<Comment> parentComments = commentRepository.findParentCommentList(postId);
+        long commentCount = parentComments.stream()
+                .filter(comment -> !comment.getContent().equals("삭제된 댓글입니다."))
+                .count();
         List<CommentResDto.CommentList> commentList = new ArrayList<>();
         for (Comment parent : parentComments) {
             List<Comment> childrenComments = commentRepository.findChildrenCommentList(postId, parent.getId());
@@ -136,15 +145,24 @@ public class PostService {
                     .collect(Collectors.toList());
 
             commentList.add(new CommentResDto.CommentList(parent, childrenList));
+
+            commentCount += childrenComments.size();
         }
 
-        return new PostResDto.PostDetail(findPost, imageUrlList, commentList);
+        //유저가 게시글 작성자인지 확인
+        boolean isWriter = false;
+        Member user = memberService.findLoginMember();
+        if(user != null && user.getId() == findPost.getWriter().getId()){
+            isWriter = true;
+        }
+
+        return new PostResDto.PostDetail(findPost, imageUrlList, commentList, commentCount, isWriter);
     }
 
 
-    /*게시글 수정*/
+    /*게시글 수정 - 보류 (이미지도 수정 가능) */
     @Transactional
-    public void updatePost(Long communityId, Long postId,
+    public void updatePostOriginal(Long communityId, Long postId,
                            PostReqDto request, List<MultipartFile> multipartFiles) {
 
         //커뮤니티&게시글 존재 및 관계 확인
@@ -172,6 +190,34 @@ public class PostService {
 
             List<PostImage> imageList = createImage(multipartFiles, post);
             post.updateImages(imageList);
+        }
+
+        //게시글 수정
+        post.updatePost(request);
+
+    }
+
+    /*게시글 수정 - 임시 (게시글 제목, 내용만 수정 가능) */
+    @Transactional
+    public void updatePost(Long communityId, Long postId, PostReqDto request) {
+
+        //커뮤니티&게시글 존재 및 관계 확인
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new CommunityException(NO_SUCH_Community, NO_SUCH_Community.getCode(), NO_SUCH_Community.getErrorMessage()));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(NO_SUCH_POST));
+        if(community.getId() != post.getCommunity().getId()){
+            throw new PostException(COMMUNITY_POST_MISMATCH);
+        }
+
+        //수정 권한 확인
+        Member member = memberService.findLoginMember();
+        if(member == null){
+            throw new MemberException(UNAUTHORIZED_ACCESS, UNAUTHORIZED_ACCESS.getCode(), UNAUTHORIZED_ACCESS.getErrorMessage());
+        }
+
+        if(post.getWriter().getId() != member.getId()){
+            throw new PostException(NO_PERMISSION, "해당 게시글에 대한 수정 권한이 없습니다.");
         }
 
         //게시글 수정

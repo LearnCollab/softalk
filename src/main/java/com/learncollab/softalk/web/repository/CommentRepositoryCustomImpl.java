@@ -63,5 +63,19 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
                 .fetch();
     }
 
+    /**
+     * 전체 댓글 개수 카운트
+        - 삭제된 댓글 제외
+     */
+    @Override
+    public Long countByPostId(Long postId) {
+        return queryFactory
+                .selectFrom(comment)
+                .where(
+                        comment.post.id.eq(postId),
+                        comment.content.ne("삭제된 댓글입니다."))
+                .fetchCount();
+    }
+
 
 }

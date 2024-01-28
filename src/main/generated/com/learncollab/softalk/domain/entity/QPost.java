@@ -35,6 +35,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final ListPath<PostImage, QPostImage> images = this.<PostImage, QPostImage>createList("images", PostImage.class, QPostImage.class, PathInits.DIRECT2);
 
+    public final StringPath thumbnailUrl = createString("thumbnailUrl");
+
     public final StringPath title = createString("title");
 
     //inherited
